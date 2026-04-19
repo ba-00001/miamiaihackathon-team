@@ -8,7 +8,7 @@ Simple Flask + Python version of the unified `MaRe` app.
 - guest mode
 - sign-in mock step
 - role picker
-- role dashboards for internal, salon-owner, and client views
+- role dashboards for internal, salon-owner, and end-user views
 - JSON endpoints for app state, agent state, and AWS image storage
 - JSON contract endpoints for salon profiles and outreach drafts
 - AWS S3-oriented storage service for picture uploads

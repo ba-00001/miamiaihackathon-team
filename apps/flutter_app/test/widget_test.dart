@@ -9,7 +9,7 @@ void main() {
     expect(find.text('MaRe'), findsWidgets);
     expect(
       find.text(
-        'One luxury scalp-health app for guests, MaRe growth teams, partner salons, and clients.',
+        'One luxury scalp-health app for guests, MaRe internal teams, partner operators, and end users.',
       ),
       findsOneWidget,
     );

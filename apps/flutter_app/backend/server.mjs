@@ -4,16 +4,16 @@ import { buildImageUploadTarget, buildStorageConfig } from './storage.mjs';
 const appState = {
   appName: 'MaRe',
   tagline:
-    'One luxury scalp-health app for guests, MaRe growth teams, partner salons, and clients.',
-  updatedAt: '2026-04-19T11:45:00-04:00',
+    'One luxury scalp-health app for guests, MaRe internal teams, partner operators, and end users.',
+  updatedAt: '2026-04-19T16:10:00-04:00',
   guest: {
     title: 'Discover MaRe without signing in',
     description:
-      'Guest mode lets future salon partners and curious clients explore the MaRe brand before creating an account.',
+      'Guest mode lets wellness enthusiasts, future partner locations, and curious end users explore the MaRe brand before creating an account.',
     highlights: [
       'Browse luxury scalp-health education',
       'Find partner salons and MaRe locations',
-      'Apply to become a MaRe salon partner',
+      'Shop shampoos, treatments, tools, and gift kits',
     ],
   },
   roles: [
@@ -21,26 +21,26 @@ const appState = {
       id: 'internal',
       title: 'MaRe Internal',
       summary:
-        'Prospect salons, generate luxury outreach, scale content, and manage approvals.',
+        'Prospect premium partners, manage outreach, support distributors, scale content, and keep risky actions in human review.',
     },
     {
       id: 'owner',
       title: 'Salon Owner',
       summary:
-        'Track partner performance, staff enablement, consultation quality, and reorder needs.',
+        'Track partner performance, MaRe Eye workflows, training, certification, consultation quality, and reorder needs.',
     },
     {
       id: 'client',
-      title: 'Client',
+      title: 'End User',
       summary:
-        'Follow a personal scalp-health journey with routines, appointments, progress, and product recommendations.',
+        'Find partner locations, follow a scalp-health journey, and shop MaRe products with personalized recommendations.',
     },
   ],
   aiNotice: {
     hasError: true,
     title: 'AI output is guarded by role and fallback mode',
     description:
-      'Guests only see public education, salon owners only see partner data, and clients only see their own journey.',
+      'Guests only see public education, salon owners only see partner data, and end users only see their own journey.',
     fallbacks: [
       'Fallback to approved templates when live generation is unavailable.',
       'Block sends or publishes until a human approves uncertain output.',
@@ -53,7 +53,7 @@ const agentResult = {
   status: 'guarded',
   tone: 'luxury, warm, systematic',
   nextAction:
-    'Let guests browse publicly, let signed-in users choose their role, and keep uncertain AI actions in review.',
+    'Let guests browse publicly, let signed-in users choose their role, and keep uncertain AI actions in review while routing booking, product, and partner flows by role.',
   yellowDot: true,
 };
 

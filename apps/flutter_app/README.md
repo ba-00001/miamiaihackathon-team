@@ -11,8 +11,9 @@ Main `MaRe` app built in Flutter for `iOS`, `Android`, and `Web`.
 - role dashboards for:
   - `MaRe Internal`
   - `Salon Owner`
-  - `Client`
+  - `End User`
 - `json_annotation` models in `lib/shared/models/`
+- internal CRM contracts for salon profiles, outreach drafts, and incentive calculations
 - local backend stub in `backend/`
 - AI prompt and fallback notes in `agent/`
 - AWS S3-oriented image storage endpoints for picture uploads

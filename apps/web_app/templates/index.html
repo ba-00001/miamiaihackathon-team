@@ -27,7 +27,7 @@
           <h1>{{ app_data.tagline }}</h1>
           <p class="hero-text">
             Guests can explore the brand, signed-in users can choose their role, and the
-            same app shell routes into internal, salon-owner, and client experiences.
+            same app shell routes into internal, salon-owner, and end-user experiences.
           </p>
           <div class="pill-row">
             <span class="pill pill-sage">Guest mode available</span>
@@ -48,7 +48,7 @@
         <article class="content-card">
           <h3>Guest Experience</h3>
           <p class="muted">No sign-in required</p>
-          <p>Explore public education, partner salon discovery, and MaRe brand storytelling before creating an account.</p>
+          <p>Explore public education, session expectations, partner-location discovery, product browsing, and MaRe brand storytelling before creating an account.</p>
         </article>
         {% for role in app_data.roles %}
         <article class="content-card">
@@ -117,7 +117,7 @@
           <h1>One identity, multiple MaRe roles</h1>
           <p class="hero-text">
             Sign in once, then choose the role for this session. A single account can hold
-            multiple experiences like salon owner and client.
+            multiple experiences like salon owner and end user.
           </p>
           <div class="button-row">
             <a class="button primary" href="{{ url_for('index', view='role-picker') }}">Continue to Role Selection</a>
@@ -141,7 +141,7 @@
           <div class="eyebrow"><span class="status-dot"></span>Role selection</div>
           <h1>Pick your MaRe experience for this session</h1>
           <p class="hero-text">
-            The same app shell routes into internal, partner-owner, and client dashboards after login.
+            The same app shell routes into internal, partner-owner, and end-user dashboards after login.
           </p>
         </div>
         <div class="hero-art">
@@ -217,6 +217,49 @@
         </div>
       </section>
       {% endfor %}
+
+      {% if current_role.id == 'internal' %}
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Prospecting And Outreach Contracts</h2>
+          <p>These are the concrete salon and outreach objects the internal MaRe team uses for guarded CRM work.</p>
+        </div>
+        <div class="grid two-up">
+          {% for salon in app_data.internalData.salonProfiles %}
+          <article class="content-card">
+            <h3>{{ salon.name }}</h3>
+            <p class="muted">{{ salon.location }} • {{ salon.estimated_revenue }}</p>
+            <p>Luxury fit score: <strong>{{ salon.compatibility_score }}</strong></p>
+            <div class="pill-row compact">
+              {% for tag in salon.aesthetic_tags %}
+              <span class="pill">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          </article>
+          {% endfor %}
+          {% for draft in app_data.internalData.outreachDrafts %}
+          <article class="content-card">
+            <h3>Outreach {{ draft.salon_id }}</h3>
+            <p class="muted">{{ draft.status }}</p>
+            <p>{{ draft.hook }}</p>
+            <p class="muted">{{ draft.value_prop }}</p>
+            {% if draft.incentives %}
+            <div class="stat-row">
+              <div class="stat-chip">
+                <span class="muted">Projected conversion</span>
+                <strong>{{ draft.incentives.projected_retail_conversion_rate }}</strong>
+              </div>
+              <div class="stat-chip">
+                <span class="muted">ROI</span>
+                <strong>{{ draft.incentives.roi_multiplier }}x</strong>
+              </div>
+            </div>
+            {% endif %}
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
 
       <section class="grid two-up">
         <section class="section-card warning-card">

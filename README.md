@@ -5,7 +5,7 @@ MaRe is one unified luxury scalp-health app with four experiences inside the sam
 - `Guest`
 - `MaRe Internal`
 - `Salon Owner`
-- `Client`
+- `End User`
 
 The app starts with a welcome screen, offers a guest path for public exploration, then routes signed-in users through role selection before loading the right dashboard.
 
@@ -14,13 +14,34 @@ The app starts with a welcome screen, offers a guest path for public exploration
 MaRe is not built as separate apps. It is one product with role-aware routing:
 
 1. `Guest`
-   Browse public education, brand storytelling, partner-salon discovery, and a partner-application path.
+   Browse public education, partner-salon discovery, session expectations, product discovery, and partner/distributor application paths.
 2. `MaRe Internal`
-   Prospect salons, review AI outputs, manage outreach, approve content, and run partner growth.
+   Prospect premium partners, review AI outputs, manage outreach, route territory/distributor leads, approve content, and run partner growth.
 3. `Salon Owner`
-   Track partner analytics, MaRe Eye media, staff enablement, and reorder flows.
-4. `Client`
-   Review scalp journey, appointments, progress images, routines, and shopping.
+   Track partner analytics, MaRe Eye media, training and certification, staff enablement, and reorder flows.
+4. `End User`
+   Find partner locations, review scalp journey, appointments, progress images, routines, shopping, and member updates.
+
+## Updated Plan
+
+The current build plan now combines your original hackathon scope, the later role-selection changes, and the official MaRe website positioning:
+
+1. Keep `MaRe` as one unified app with a shared login system, guest mode, AI layer, and AWS-backed picture storage.
+2. Support `Guest`, `MaRe Internal`, `Salon Owner`, and `End User` flows inside the same shell with role switching after sign in.
+3. Make `Guest` mode strong enough to show real brand value:
+   partner-location discovery, session expectations, scalp-health education, membership signup, and product browsing.
+4. Make `MaRe Internal` serve the real business team:
+   `MaRe growth lead`, `MaRe sales team`, and `prospect salon pipeline managers`.
+5. Expand internal tools around premium-partner targeting:
+   salons, spas, clinics, hotels, wellness centers, and distributor opportunities.
+6. Keep internal AI guarded:
+   prospect scoring, outreach generation, content generation, and review queues with visible fallback states and the yellow dot.
+7. Make the `Salon Owner` role reflect the official MaRe partner story:
+   MaRe Eye diagnostics, visit history, protocol recommendations, training, certification, wholesale support, and marketing assets.
+8. Make the `End User` role reflect the official MaRe consumer story:
+   find partner locations, book sessions, understand what to expect, and shop products like washes, shampoos, rinses, tools, light therapy, and gift kits.
+9. Keep the Flutter app as the main cross-platform client for `iOS`, `Android`, and `Web`, and keep the simple app as the Flask + Python version.
+10. Use the same data model across both apps for salon profiles, outreach drafts, incentives, AI fallbacks, and AWS image storage.
 
 ## Repo Structure
 
@@ -47,8 +68,9 @@ docs/
 The Flutter app is the main cross-platform MaRe client and now includes:
 
 - one `MaRe` shell for `guest`, `sign in`, `role picker`, and `role dashboards`
-- role-aware experiences for `MaRe Internal`, `Salon Owner`, and `Client`
+- role-aware experiences for `MaRe Internal`, `Salon Owner`, and `End User`
 - `json_annotation` models in `lib/shared/models/`
+- salon profile, outreach draft, and incentive calculation contracts for internal CRM flows
 - explicit Flutter targets for `ios`, `android`, and `web`
 - AWS S3-oriented storage endpoints in the local backend
 - yellow-dot AI/fallback marker wherever AI logic or guarded output is active
@@ -62,7 +84,17 @@ The simple web version uses `Flask + Python` and mirrors the same product flow:
 - sign-in mock step
 - role picker
 - role-specific dashboards
-- JSON endpoints for app state, AI state, and storage
+- JSON endpoints for app state, AI state, storage, salon profiles, and outreach drafts
+
+## Website-Grounded Features
+
+The current product story also reflects the official `mareheadspa.com` positioning:
+
+- professionals include salons, spas, clinics, hotels, wellness centers, and distributors
+- wellness enthusiasts can explore education, member updates, session expectations, locations, and products
+- the MaRe system includes `MaRe Eye`, the `MaRe Capsule`, Italian clean-beauty products with Philip Martin's, and scalp/hair tools
+- end users should be able to find products like `Purifying Wash`, `In Amber Wash`, and related scalp-care items
+- session flow should show AI scalp scan, questionnaire, treatment plan, immersive ritual, and post-treatment home-care recommendations
 
 ## AWS Image Storage
 
@@ -78,7 +110,7 @@ AI never acts as silent automation.
 
 - guest users only see public education
 - salon owners only see partner data
-- clients only see their own journey
+- end users only see their own journey
 - internal teams can generate drafts but risky actions stay gated
 - uncertain AI output falls back to templates or review queues
 - the yellow dot shows AI-managed or fallback-enabled surfaces
@@ -152,7 +184,7 @@ See [docs/business-technical-todos.md](docs/business-technical-todos.md).
 
 The main next steps are:
 
-- connect live salon and client data sources
+- connect live salon, partner, and end-user data sources
 - implement real auth and role mapping
 - move mock storage prep into real presigned S3 uploads
 - integrate real LLM and multimodal providers

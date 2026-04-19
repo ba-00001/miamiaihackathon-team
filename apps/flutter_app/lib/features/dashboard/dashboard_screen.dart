@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../shared/data/mock_growth_engine_snapshot.dart';
 import '../../shared/models/models.dart';
 import '../../shared/services/mare_app_repository.dart';
 import '../../theme/mare_theme.dart';
@@ -262,7 +263,7 @@ class _WelcomeView extends StatelessWidget {
           title: data.appName,
           subtitle: data.tagline,
           description:
-              'Welcome into one unified MaRe app. Guests can explore the brand, signed-in users can pick their role, and every role-specific experience stays inside the same luxury shell.',
+              'Welcome into one unified MaRe app. Guests can explore the brand, signed-in users can pick their role, and every role-specific experience stays inside the same luxury shell for internal teams, partners, and end users.',
           pills: [
             'Guest mode available',
             'Role selection after sign in',
@@ -287,7 +288,7 @@ class _WelcomeView extends StatelessWidget {
               title: 'Guest Experience',
               subtitle: 'No sign-in required',
               detail:
-                  'Explore luxury rituals, public education, partner salon discovery, and partner application entry points.',
+                  'Explore luxury rituals, session expectations, partner-location discovery, product browsing, and partner application entry points.',
               tags: data.guest.highlights,
             ),
             ...data.roles.map(
@@ -363,8 +364,8 @@ class _SignInView extends StatelessWidget {
           title: 'Sign In',
           subtitle: 'One MaRe identity, multiple role experiences',
           description:
-              'Sign in once, then choose the role you want for this session. A single user can hold multiple roles such as salon owner and client.',
-          pills: const ['Internal', 'Salon Owner', 'Client'],
+              'Sign in once, then choose the role you want for this session. A single user can hold multiple roles such as salon owner and end user.',
+          pills: const ['Internal', 'Salon Owner', 'End User'],
           actions: [
             FilledButton(
               onPressed: onContinue,
@@ -434,7 +435,7 @@ class _RolePickerView extends StatelessWidget {
           title: 'Role Selection',
           subtitle: 'Pick the MaRe experience for this session',
           description:
-              'The same app routes into different dashboards based on role. Users with multiple roles can switch without leaving MaRe.',
+              'The same app routes into different dashboards based on role. Users with multiple roles can switch between internal, partner, and end-user experiences without leaving MaRe.',
           pills: roles.map((role) => role.title).toList(),
         ),
         const SizedBox(height: 18),
@@ -500,6 +501,10 @@ class _RoleDashboardView extends StatelessWidget {
             child: _ExperienceSectionCard(section: section),
           ),
         ),
+        if (role.id == 'internal') ...[
+          const SizedBox(height: 2),
+          _InternalOpsSection(snapshot: demoGrowthEngineSnapshot),
+        ],
         _ResponsiveCards(
           cards: [
             _AiNoticeCard(aiNotice: aiNotice),
@@ -626,6 +631,49 @@ class _HeroCard extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _InternalOpsSection extends StatelessWidget {
+  const _InternalOpsSection({required this.snapshot});
+
+  final GrowthEngineSnapshot snapshot;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(22),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Prospecting And Outreach Contracts',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'This section mirrors the internal CRM objects used for salon prospecting, incentive scoring, and guarded outreach drafting.',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 18),
+              _ResponsiveCards(
+                cards: [
+                  ...snapshot.prospects
+                      .take(2)
+                      .map((prospect) => _ProspectSignalCard(prospect: prospect)),
+                  ...snapshot.outreachDrafts
+                      .take(2)
+                      .map((draft) => _OutreachDraftPreviewCard(draft: draft)),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -789,6 +837,112 @@ class _ExperienceCardView extends StatelessWidget {
                     .toList(),
               ),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProspectSignalCard extends StatelessWidget {
+  const _ProspectSignalCard({required this.prospect});
+
+  final ProspectSignal prospect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: const Color(0xFFFFFCF7),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(prospect.name, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 6),
+            Text(
+              '${prospect.cityState} • ${prospect.revenueBand}',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              prospect.aestheticSignal,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _Pill(
+                  label: 'Fit ${prospect.fitScore.toStringAsFixed(0)}',
+                  color: const Color(0xFFFFF0B8),
+                ),
+                _Pill(
+                  label: '${prospect.locations} locations',
+                  color: const Color(0xFFF5EEE2),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              prospect.socialHook,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OutreachDraftPreviewCard extends StatelessWidget {
+  const _OutreachDraftPreviewCard({required this.draft});
+
+  final OutreachDraft draft;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: const Color(0xFFFFFCF7),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Outreach ${draft.salonId}',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 8),
+            Text(draft.hook, style: Theme.of(context).textTheme.bodyLarge),
+            const SizedBox(height: 10),
+            Text(
+              draft.valueProp,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _Pill(
+                  label: draft.status,
+                  color: const Color(0xFFFFF0B8),
+                ),
+                if (draft.incentives != null)
+                  _Pill(
+                    label:
+                        'ROI ${draft.incentives!.roiMultiplier.toStringAsFixed(1)}x',
+                    color: const Color(0xFFF5EEE2),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              draft.guardrail,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ],
         ),
       ),
