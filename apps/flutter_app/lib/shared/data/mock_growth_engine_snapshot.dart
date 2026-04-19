@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import '../models/models.dart';
 
-const _snapshotJson = '''
+const _snapshotJson = r'''
 {
   "generatedAt": "2026-04-19T10:45:00-04:00",
   "marketFocus": "Miami proof of concept with nationwide luxury expansion",

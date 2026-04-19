@@ -50,6 +50,7 @@ The Flutter app now includes:
 - A luxury-styled dashboard covering prospects, outreach, content, AI watchtower, and approval queue.
 - A yellow status dot shown anywhere the developer should recognize an AI-controlled or fallback-enabled surface.
 - Local `backend/` and `agent/` folders to show the full solution shape, not just the UI.
+- Explicit Flutter targets for `ios`, `android`, and `web`.
 
 ## Web Notes
 
@@ -99,7 +100,24 @@ Key technical next steps:
 cd apps/flutter_app
 flutter pub get
 flutter pub run build_runner build --delete-conflicting-outputs
-flutter run
+```
+
+iOS:
+
+```bash
+flutter run -d ios
+```
+
+Android:
+
+```bash
+flutter run -d android
+```
+
+Web:
+
+```bash
+flutter run -d chrome
 ```
 
 Optional mock backend:

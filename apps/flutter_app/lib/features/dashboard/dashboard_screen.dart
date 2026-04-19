@@ -62,10 +62,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             'Rank high-revenue salons using aesthetic signals, location density, and retail readiness.',
                         child: Column(
                           children: data.prospects
-                              .map((prospect) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
-                                    child: _ProspectCard(prospect: prospect),
-                                  ))
+                              .map(
+                                (prospect) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: _ProspectCard(prospect: prospect),
+                                ),
+                              )
                               .toList(),
                         ),
                       ),
@@ -77,11 +79,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               'Human-in-the-loop drafts that sound like salon insiders, not automation.',
                           child: Column(
                             children: data.outreachDrafts
-                                .map((draft) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: _OutreachCard(draft: draft),
-                                    ))
+                                .map(
+                                  (draft) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: _OutreachCard(draft: draft),
+                                  ),
+                                )
                                 .toList(),
                           ),
                         ),
@@ -91,11 +94,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               'AI-search-ready content built around scalp wellness, luxury rituals, and conversion.',
                           child: Column(
                             children: data.contentAssets
-                                .map((asset) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: _ContentCard(asset: asset),
-                                    ))
+                                .map(
+                                  (asset) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: _ContentCard(asset: asset),
+                                  ),
+                                )
                                 .toList(),
                           ),
                         ),
@@ -114,11 +118,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               'Every risky action has a clear owner, next action, and fallback lane.',
                           child: Column(
                             children: data.reviewQueue
-                                .map((item) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: _ReviewCard(item: item),
-                                    ))
+                                .map(
+                                  (item) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: _ReviewCard(item: item),
+                                  ),
+                                )
                                 .toList(),
                           ),
                         ),
@@ -285,7 +290,10 @@ class _MetricsSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(item.$1, style: Theme.of(context).textTheme.bodyMedium),
+                    Text(
+                      item.$1,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                     Text(
                       item.$2,
                       style: Theme.of(context).textTheme.headlineMedium,
@@ -312,13 +320,7 @@ class _TwoColumnSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth < 900) {
-          return Column(
-            children: [
-              left,
-              const SizedBox(height: 18),
-              right,
-            ],
-          );
+          return Column(children: [left, const SizedBox(height: 18), right]);
         }
 
         return Row(
@@ -401,16 +403,19 @@ class _ProspectCard extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 10),
-          Text(prospect.socialHook, style: Theme.of(context).textTheme.bodyLarge),
+          Text(
+            prospect.socialHook,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: prospect.reasons
-                .map((reason) => _Pill(
-                      label: reason,
-                      color: const Color(0xFFF5EEE2),
-                    ))
+                .map(
+                  (reason) =>
+                      _Pill(label: reason, color: const Color(0xFFF5EEE2)),
+                )
                 .toList(),
           ),
         ],
@@ -539,8 +544,10 @@ class _AiErrorCard extends StatelessWidget {
               const _StatusDot(),
               const SizedBox(width: 10),
               Expanded(
-                child: Text(error.title,
-                    style: Theme.of(context).textTheme.titleLarge),
+                child: Text(
+                  error.title,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
             ],
           ),
@@ -579,7 +586,10 @@ class _ReviewCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(item.lane, style: Theme.of(context).textTheme.titleLarge),
+                child: Text(
+                  item.lane,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
               _Pill(
                 label: item.status,

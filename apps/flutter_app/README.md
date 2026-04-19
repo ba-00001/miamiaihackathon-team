@@ -1,16 +1,42 @@
-# flutter_app
+# Flutter App
 
-A new Flutter project.
+Founder-facing Flutter prototype for the MaRe Luxury Growth Engine.
 
-## Getting Started
+Platforms enabled:
 
-This project is a starting point for a Flutter application.
+- iOS
+- Android
+- Web
 
-A few resources to get you started if this is your first Flutter project:
+## Includes
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- luxury dashboard UI
+- `json_annotation` models in `lib/shared/models/`
+- mock business data
+- local backend stub in `backend/`
+- AI prompt and fallback notes in `agent/`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Run
+
+```bash
+flutter pub get
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+Run on iOS simulator:
+
+```bash
+flutter run -d ios
+```
+
+Run on Android emulator/device:
+
+```bash
+flutter run -d android
+```
+
+Run on Flutter Web:
+
+```bash
+flutter run -d chrome
+```
