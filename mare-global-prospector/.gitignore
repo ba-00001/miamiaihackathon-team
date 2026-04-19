@@ -1,0 +1,31 @@
+# --- Python / Virtual Environments ---
+# Keeps your local libraries out of the repo
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Environment Variables ---
+.env
+.env.local
+.env.*
+
+# --- IDEs ---
+# User-specific settings for VS Code or PyCharm
+.vscode/
+.idea/
+
+# --- Database / Storage ---
+*.log
+*.sqlite
+*.db
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+# Ignore built images or specific docker ignore files if preferred
+.dockerignore
