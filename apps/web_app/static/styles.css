@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap");
+
 :root {
   --background: #f8f1e6;
   --card: #fffaf2;
@@ -22,7 +24,7 @@ body {
     radial-gradient(circle at top right, rgba(245, 201, 76, 0.34), transparent 20%),
     linear-gradient(180deg, #fffaf2 0%, #f7ecdf 100%);
   color: var(--ink);
-  font-family: "Inter", "Helvetica Neue", sans-serif;
+  font-family: "Manrope", "Helvetica Neue", sans-serif;
 }
 
 a {
@@ -59,7 +61,7 @@ a {
 }
 
 .brand {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 1.8rem;
   font-weight: 700;
 }
@@ -96,7 +98,7 @@ a {
 .section-header h2,
 .metric-card h2,
 .content-card h3 {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: "Cormorant Garamond", Georgia, serif;
 }
 
 .hero-copy h1 {
@@ -225,6 +227,13 @@ a {
   line-height: 1.7;
 }
 
+.persona-note {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
 .card-top {
   display: flex;
   justify-content: space-between;
@@ -286,7 +295,7 @@ a {
   gap: 4px;
 }
 
-.mock-form {
+.access-form {
   width: 100%;
   padding: 22px;
   border: 1px solid var(--line);
@@ -296,12 +305,12 @@ a {
   gap: 10px;
 }
 
-.mock-form label {
+.access-form label {
   font-size: 0.9rem;
   font-weight: 700;
 }
 
-.mock-form input {
+.access-form input {
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 12px 14px;

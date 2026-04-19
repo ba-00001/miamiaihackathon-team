@@ -18,8 +18,10 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   late Future<MareAppSnapshot> _snapshotFuture;
   final _repository = const MareAppRepository();
-  final _emailController = TextEditingController(text: 'demo@mare.app');
-  final _passwordController = TextEditingController(text: 'luxury-demo');
+  final _emailController = TextEditingController(
+    text: 'concierge@mareheadspa.com',
+  );
+  final _passwordController = TextEditingController(text: 'mare-private');
 
   _MareView _view = _MareView.welcome;
   String? _selectedRoleId;
@@ -218,17 +220,17 @@ class _TopBar extends StatelessWidget {
               runSpacing: 10,
               children: [
                 _ToolbarAction(
-                  label: 'Guest',
+                  label: 'Enter',
                   selected: view == _MareView.guest,
                   onPressed: onGuest,
                 ),
                 _ToolbarAction(
-                  label: 'Sign In',
+                  label: 'Private Access',
                   selected: view == _MareView.signIn,
                   onPressed: onSignIn,
                 ),
                 _ToolbarAction(
-                  label: selectedRoleTitle ?? 'Role Picker',
+                  label: selectedRoleTitle ?? 'Experiences',
                   selected:
                       view == _MareView.rolePicker ||
                       view == _MareView.roleDashboard,
@@ -261,23 +263,23 @@ class _WelcomeView extends StatelessWidget {
       children: [
         _HeroCard(
           title: data.appName,
-          subtitle: data.tagline,
+          subtitle: 'Scalp wellness, reimagined for a luxury world.',
           description:
-              'Welcome into one unified MaRe app. Guests can explore the brand, signed-in users can pick their role, and every role-specific experience stays inside the same luxury shell for internal teams, partners, and end users.',
+              'MaRe is introduced as a brand first: elevated rituals, advanced scalp intelligence, and a private-feeling experience for discerning guests, partner operators, and the internal team guiding growth behind the scenes.',
           pills: [
-            'Guest mode available',
-            'Role selection after sign in',
+            'Quiet luxury',
+            'Personalized scalp journeys',
             'AWS S3 media storage',
           ],
           actions: [
             FilledButton(
               onPressed: onGuest,
               style: FilledButton.styleFrom(backgroundColor: MareColors.ink),
-              child: const Text('Continue as Guest'),
+              child: const Text('Enter MaRe'),
             ),
             OutlinedButton(
               onPressed: onSignIn,
-              child: const Text('Sign In to Choose Role'),
+              child: const Text('Private Access'),
             ),
           ],
         ),
@@ -285,18 +287,24 @@ class _WelcomeView extends StatelessWidget {
         _ResponsiveCards(
           cards: [
             _ActionCard(
-              title: 'Guest Experience',
-              subtitle: 'No sign-in required',
+              title: 'The Brand',
+              subtitle: 'A refined first impression',
               detail:
-                  'Explore luxury rituals, session expectations, partner-location discovery, product browsing, and partner application entry points.',
-              tags: data.guest.highlights,
+                  'Lead with the MaRe world itself: ritual-led care, modern scalp diagnostics, destination-level service, and product discovery that feels editorial instead of transactional.',
+              tags: const [
+                'Brand-first',
+                'High-touch',
+                'Luxury wellness',
+              ],
             ),
-            ...data.roles.map(
-              (role) => _ActionCard(
-                title: role.title,
-                subtitle: role.audience,
-                detail: role.summary,
-                tags: role.quickActions,
+            ...data.guest.sections.take(2).expand(
+              (section) => section.cards.take(1).map(
+                (card) => _ActionCard(
+                  title: card.title,
+                  subtitle: card.subtitle,
+                  detail: card.detail,
+                  tags: card.tags,
+                ),
               ),
             ),
           ],
@@ -362,19 +370,19 @@ class _SignInView extends StatelessWidget {
       children: [
         _HeroCard(
           title: 'Sign In',
-          subtitle: 'One MaRe identity, multiple role experiences',
+          subtitle: 'Private access to the MaRe world',
           description:
-              'Sign in once, then choose the role you want for this session. A single user can hold multiple roles such as salon owner and end user.',
+              'Enter once, then continue into the experience that matches your relationship to MaRe. One account can hold internal, partner, and end-user access.',
           pills: const ['Internal', 'Salon Owner', 'End User'],
           actions: [
             FilledButton(
               onPressed: onContinue,
               style: FilledButton.styleFrom(backgroundColor: MareColors.ink),
-              child: const Text('Continue to Role Selection'),
+              child: const Text('Continue'),
             ),
             TextButton(
               onPressed: onGuest,
-              child: const Text('Stay in Guest Mode'),
+              child: const Text('Return to Brand Entry'),
             ),
           ],
         ),
@@ -386,7 +394,7 @@ class _SignInView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Mock sign-in for the hackathon demo',
+                  'Private access',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 14),
@@ -408,7 +416,7 @@ class _SignInView extends StatelessWidget {
                 ),
                 const SizedBox(height: 14),
                 Text(
-                  'This mock auth step demonstrates the flow only. In production it should route through the shared MaRe auth backend and role service.',
+                  'Use your MaRe credentials to continue into your private experience.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -433,9 +441,9 @@ class _RolePickerView extends StatelessWidget {
       children: [
         _HeroCard(
           title: 'Role Selection',
-          subtitle: 'Pick the MaRe experience for this session',
+          subtitle: 'Choose your place inside MaRe',
           description:
-              'The same app routes into different dashboards based on role. Users with multiple roles can switch between internal, partner, and end-user experiences without leaving MaRe.',
+              'Each role reveals a tailored information environment while preserving the same MaRe brand language, visual finish, and controlled AI behavior.',
           pills: roles.map((role) => role.title).toList(),
         ),
         const SizedBox(height: 18),
@@ -445,7 +453,7 @@ class _RolePickerView extends StatelessWidget {
                 (role) => _ActionCard(
                   title: role.title,
                   subtitle: role.audience,
-                  detail: role.summary,
+                  detail: '${role.summary} ${role.sections.first.cards.first.title} represents the primary persona for this experience.',
                   tags: role.quickActions,
                   action: FilledButton(
                     onPressed: () => onRoleSelected(role.id),
@@ -648,10 +656,10 @@ class _InternalOpsSection extends StatelessWidget {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(22),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
                 'Prospecting And Outreach Contracts',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
@@ -939,10 +947,7 @@ class _OutreachDraftPreviewCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Text(
-              draft.guardrail,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            Text(draft.guardrail, style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
       ),

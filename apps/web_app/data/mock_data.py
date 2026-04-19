@@ -72,6 +72,22 @@ MARE_APP_SNAPSHOT = {
         ],
         "sections": [
             {
+                "title": "Persona",
+                "subtitle": "A refined public entry for the first MaRe impression.",
+                "cards": [
+                    {
+                        "title": "Sophia Vale",
+                        "subtitle": "Wellness enthusiast and destination guest",
+                        "detail": "Sophia is a high-earning professional who values elevated rituals, trusted guidance, and visible results. She wants to understand the MaRe world, discover the right location, and invest in products that feel luxurious and effective.",
+                        "tags": ["Guest persona", "High earner", "Luxury wellness"],
+                        "stats": [
+                            {"label": "Primary intent", "value": "Discover + book"},
+                            {"label": "Preferred tone", "value": "Quiet luxury"},
+                        ],
+                    }
+                ],
+            },
+            {
                 "title": "Explore the brand",
                 "subtitle": "A public-facing path for wellness enthusiasts who want to understand the MaRe system first.",
                 "cards": [
@@ -160,6 +176,22 @@ MARE_APP_SNAPSHOT = {
                 "Release AI-search content",
             ],
             "sections": [
+                {
+                    "title": "Persona",
+                    "subtitle": "A decision-maker focused on selective expansion.",
+                    "cards": [
+                        {
+                            "title": "Avery Laurent",
+                            "subtitle": "MaRe growth lead",
+                            "detail": "Avery is responsible for growing the MaRe partner network without eroding the brand. She needs high-confidence prospecting, selective outreach, territory awareness, and human-reviewed AI outputs that feel premium and precise.",
+                            "tags": ["Growth lead", "Selective expansion", "Human review"],
+                            "stats": [
+                                {"label": "Primary outcome", "value": "Qualified partners"},
+                                {"label": "Brand bar", "value": "Exceptionally high"},
+                            ],
+                        }
+                    ],
+                },
                 {
                     "title": "Target network",
                     "subtitle": "Qualify the right partner type before sales effort begins.",
@@ -265,6 +297,22 @@ MARE_APP_SNAPSHOT = {
             ],
             "sections": [
                 {
+                    "title": "Persona",
+                    "subtitle": "An operator who wants prestige, precision, and measurable uplift.",
+                    "cards": [
+                        {
+                            "title": "Isabella Moreau",
+                            "subtitle": "Partner salon owner",
+                            "detail": "Isabella runs a premium salon and wants MaRe to feel like a signature extension of her brand. She needs diagnostics, staff confidence, certification, and retail performance without ever cheapening the guest experience.",
+                            "tags": ["Partner owner", "Retail lift", "Luxury operations"],
+                            "stats": [
+                                {"label": "Primary outcome", "value": "Prestige + growth"},
+                                {"label": "Service style", "value": "High-touch"},
+                            ],
+                        }
+                    ],
+                },
+                {
                     "title": "Partner Dashboard",
                     "subtitle": "A live operating view for salon performance and retail conversion.",
                     "cards": [
@@ -342,6 +390,22 @@ MARE_APP_SNAPSHOT = {
                 "Shop shampoos and tools",
             ],
             "sections": [
+                {
+                    "title": "Persona",
+                    "subtitle": "A discerning client who expects results to feel beautifully personal.",
+                    "cards": [
+                        {
+                            "title": "Camille Ashford",
+                            "subtitle": "End user and private client",
+                            "detail": "Camille is affluent, image-conscious, and wellness-driven. She wants to find the right MaRe partner, understand what her session will feel like, follow her scalp journey, and shop products that match her concerns without guesswork.",
+                            "tags": ["End user", "High earner", "Personalized care"],
+                            "stats": [
+                                {"label": "Primary outcome", "value": "Guided confidence"},
+                                {"label": "Shopping style", "value": "Recommendation-led"},
+                            ],
+                        }
+                    ],
+                },
                 {
                     "title": "My Journey",
                     "subtitle": "Personalized care, progress, and follow-up in one place.",

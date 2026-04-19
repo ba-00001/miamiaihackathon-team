@@ -28,20 +28,30 @@ The current build plan now combines your original hackathon scope, the later rol
 
 1. Keep `MaRe` as one unified app with a shared login system, guest mode, AI layer, and AWS-backed picture storage.
 2. Support `Guest`, `MaRe Internal`, `Salon Owner`, and `End User` flows inside the same shell with role switching after sign in.
-3. Make `Guest` mode strong enough to show real brand value:
+3. Open the experience as the `MaRe` brand first, not as a visible role chooser, so the first impression feels like a real luxury product.
+4. Attach a clear persona to each experience so the product team and developers know exactly who each surface is serving.
+5. Make `Guest` mode strong enough to show real brand value:
    partner-location discovery, session expectations, scalp-health education, membership signup, and product browsing.
-4. Make `MaRe Internal` serve the real business team:
+6. Make `MaRe Internal` serve the real business team:
    `MaRe growth lead`, `MaRe sales team`, and `prospect salon pipeline managers`.
-5. Expand internal tools around premium-partner targeting:
+7. Expand internal tools around premium-partner targeting:
    salons, spas, clinics, hotels, wellness centers, and distributor opportunities.
-6. Keep internal AI guarded:
+8. Keep internal AI guarded:
    prospect scoring, outreach generation, content generation, and review queues with visible fallback states and the yellow dot.
-7. Make the `Salon Owner` role reflect the official MaRe partner story:
+9. Make the `Salon Owner` role reflect the official MaRe partner story:
    MaRe Eye diagnostics, visit history, protocol recommendations, training, certification, wholesale support, and marketing assets.
-8. Make the `End User` role reflect the official MaRe consumer story:
+10. Make the `End User` role reflect the official MaRe consumer story:
    find partner locations, book sessions, understand what to expect, and shop products like washes, shampoos, rinses, tools, light therapy, and gift kits.
-9. Keep the Flutter app as the main cross-platform client for `iOS`, `Android`, and `Web`, and keep the simple app as the Flask + Python version.
-10. Use the same data model across both apps for salon profiles, outreach drafts, incentives, AI fallbacks, and AWS image storage.
+11. Remove visible prototype language from the user-facing UI so the experience feels real and premium even while backend behavior remains safely staged.
+12. Keep the Flutter app as the main cross-platform client for `iOS`, `Android`, and `Web`, and keep the simple app as the Flask + Python version.
+13. Use the same data model across both apps for salon profiles, outreach drafts, incentives, AI fallbacks, and AWS image storage.
+
+## Personas
+
+- `Guest`: `Sophia Vale`, a high-earning wellness enthusiast looking for a refined ritual, the right location, and product confidence before she books.
+- `MaRe Internal`: `Avery Laurent`, a growth lead who needs selective expansion, premium partner targeting, and human-reviewed AI assistance.
+- `Salon Owner`: `Isabella Moreau`, a partner operator who wants prestige, staff confidence, certification, and measurable retail lift.
+- `End User`: `Camille Ashford`, a discerning client who wants partner discovery, a personalized treatment journey, and recommendation-led shopping.
 
 ## Repo Structure
 

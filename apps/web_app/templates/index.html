@@ -14,29 +14,30 @@
           <span>{{ app_data.appName }}</span>
         </a>
         <nav class="top-actions">
-          <a class="top-link" href="{{ url_for('index', view='guest') }}">Guest</a>
-          <a class="top-link" href="{{ url_for('index', view='signin') }}">Sign In</a>
-          <a class="top-link" href="{{ url_for('index', view='role-picker') }}">Role Picker</a>
+          <a class="top-link" href="{{ url_for('index', view='guest') }}">Enter</a>
+          <a class="top-link" href="{{ url_for('index', view='signin') }}">Private Access</a>
+          <a class="top-link" href="{{ url_for('index', view='role-picker') }}">Experiences</a>
         </nav>
       </header>
 
       {% if view == 'welcome' %}
       <section class="hero">
         <div class="hero-copy">
-          <div class="eyebrow"><span class="status-dot"></span>One unified MaRe app</div>
-          <h1>{{ app_data.tagline }}</h1>
+          <div class="eyebrow"><span class="status-dot"></span>MaRe</div>
+          <h1>Scalp wellness, reimagined for a luxury world.</h1>
           <p class="hero-text">
-            Guests can explore the brand, signed-in users can choose their role, and the
-            same app shell routes into internal, salon-owner, and end-user experiences.
+            MaRe is introduced as a brand first: elevated rituals, advanced scalp intelligence,
+            and a private-feeling experience for discerning guests, partner operators, and the
+            internal team guiding growth behind the scenes.
           </p>
           <div class="pill-row">
-            <span class="pill pill-sage">Guest mode available</span>
-            <span class="pill pill-rose">Role selection after sign in</span>
+            <span class="pill pill-sage">Quiet luxury</span>
+            <span class="pill pill-rose">Personalized scalp journeys</span>
             <span class="pill pill-gold">AWS image storage: {{ storage.mode }}</span>
           </div>
           <div class="button-row">
-            <a class="button primary" href="{{ url_for('index', view='guest') }}">Continue as Guest</a>
-            <a class="button secondary" href="{{ url_for('index', view='signin') }}">Sign In to Choose Role</a>
+            <a class="button primary" href="{{ url_for('index', view='guest') }}">Enter MaRe</a>
+            <a class="button secondary" href="{{ url_for('index', view='signin') }}">Private Access</a>
           </div>
         </div>
         <div class="hero-art">
@@ -46,16 +47,18 @@
 
       <section class="grid three-up">
         <article class="content-card">
-          <h3>Guest Experience</h3>
-          <p class="muted">No sign-in required</p>
-          <p>Explore public education, session expectations, partner-location discovery, product browsing, and MaRe brand storytelling before creating an account.</p>
+          <h3>The Brand</h3>
+          <p class="muted">A refined first impression</p>
+          <p>Lead with the MaRe world itself: ritual-led care, modern scalp diagnostics, destination-level service, and product discovery that feels editorial instead of transactional.</p>
         </article>
-        {% for role in app_data.roles %}
+        {% for section in app_data.guest.sections[:2] %}
+        {% for card in section.cards[:1] %}
         <article class="content-card">
-          <h3>{{ role.title }}</h3>
-          <p class="muted">{{ role.audience }}</p>
-          <p>{{ role.summary }}</p>
+          <h3>{{ card.title }}</h3>
+          <p class="muted">{{ card.subtitle }}</p>
+          <p>{{ card.detail }}</p>
         </article>
+        {% endfor %}
         {% endfor %}
       </section>
 
@@ -71,7 +74,7 @@
             {% endfor %}
           </div>
           <div class="button-row">
-            <a class="button primary" href="{{ url_for('index', view='signin') }}">Sign In for Role Access</a>
+            <a class="button primary" href="{{ url_for('index', view='signin') }}">Private Access</a>
           </div>
         </div>
         <div class="hero-art">
@@ -114,23 +117,23 @@
       <section class="hero">
         <div class="hero-copy">
           <div class="eyebrow"><span class="status-dot"></span>Sign in</div>
-          <h1>One identity, multiple MaRe roles</h1>
+          <h1>Private access to the MaRe world</h1>
           <p class="hero-text">
-            Sign in once, then choose the role for this session. A single account can hold
-            multiple experiences like salon owner and end user.
+            Enter once, then continue into the experience that matches your relationship to MaRe.
+            One account can hold internal, partner, and end-user access.
           </p>
           <div class="button-row">
-            <a class="button primary" href="{{ url_for('index', view='role-picker') }}">Continue to Role Selection</a>
-            <a class="button secondary" href="{{ url_for('index', view='guest') }}">Stay in Guest Mode</a>
+            <a class="button primary" href="{{ url_for('index', view='role-picker') }}">Continue</a>
+            <a class="button secondary" href="{{ url_for('index', view='guest') }}">Return to Brand Entry</a>
           </div>
         </div>
         <div class="hero-art sign-in-card">
-          <div class="mock-form">
+          <div class="access-form">
             <label>Email</label>
-            <input value="demo@mare.app" />
+            <input value="concierge@mareheadspa.com" />
             <label>Password</label>
-            <input value="luxury-demo" type="password" />
-            <p class="muted">Mock auth for the hackathon demo. Production auth should connect to the shared MaRe backend.</p>
+            <input value="mare-private" type="password" />
+            <p class="muted">Use your MaRe credentials to continue into your private experience.</p>
           </div>
         </div>
       </section>
@@ -139,9 +142,10 @@
       <section class="hero">
         <div class="hero-copy">
           <div class="eyebrow"><span class="status-dot"></span>Role selection</div>
-          <h1>Pick your MaRe experience for this session</h1>
+          <h1>Choose your place inside MaRe</h1>
           <p class="hero-text">
-            The same app shell routes into internal, partner-owner, and end-user dashboards after login.
+            Each role reveals a tailored information environment while preserving the same
+            MaRe brand language, visual finish, and controlled AI behavior.
           </p>
         </div>
         <div class="hero-art">
@@ -155,6 +159,7 @@
           <h3>{{ role.title }}</h3>
           <p class="muted">{{ role.audience }}</p>
           <p>{{ role.summary }}</p>
+          <p class="persona-note">Persona: {{ role.sections[0].cards[0].title }} — {{ role.sections[0].cards[0].subtitle }}</p>
           <div class="pill-row compact">
             {% for action in role.quickActions %}
             <span class="pill">{{ action }}</span>
@@ -294,12 +299,12 @@
       <section class="section-card">
         <div class="section-header">
           <h2>Developer Marker</h2>
-          <p>The yellow circle is the visual cue that this is the MaRe demo environment.</p>
+          <p>The yellow circle is the visual cue for guarded AI, elevated review, and protected brand surfaces.</p>
         </div>
         <div class="developer-marker">
           <span class="status-dot large"></span>
           <p class="muted">
-            Whenever you see the yellow dot, you are looking at live AI-assisted, mocked AI, or fallback-enabled surfaces that still need human review.
+            Whenever you see the yellow dot, you are looking at AI-assisted or fallback-enabled surfaces that still require human review.
           </p>
         </div>
       </section>
