@@ -1,26 +1,28 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'incentive_calculation.dart';
+
 part 'outreach_draft.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class OutreachDraft {
   const OutreachDraft({
-    required this.salonName,
-    required this.channel,
-    required this.subjectLine,
+    required this.salonId,
     required this.hook,
-    required this.body,
-    required this.postcardConcept,
+    required this.valueProp,
     required this.guardrail,
+    required this.fullMessage,
+    this.incentives,
+    required this.status,
   });
 
-  final String salonName;
-  final String channel;
-  final String subjectLine;
+  final String salonId;
   final String hook;
-  final String body;
-  final String postcardConcept;
+  final String valueProp;
   final String guardrail;
+  final String fullMessage;
+  final IncentiveCalculation? incentives;
+  final String status;
 
   factory OutreachDraft.fromJson(Map<String, dynamic> json) =>
       _$OutreachDraftFromJson(json);

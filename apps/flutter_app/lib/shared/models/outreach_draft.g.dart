@@ -8,22 +8,26 @@ part of 'outreach_draft.dart';
 
 OutreachDraft _$OutreachDraftFromJson(Map<String, dynamic> json) =>
     OutreachDraft(
-      salonName: json['salonName'] as String,
-      channel: json['channel'] as String,
-      subjectLine: json['subjectLine'] as String,
+      salonId: json['salon_id'] as String,
       hook: json['hook'] as String,
-      body: json['body'] as String,
-      postcardConcept: json['postcardConcept'] as String,
+      valueProp: json['value_prop'] as String,
       guardrail: json['guardrail'] as String,
+      fullMessage: json['full_message'] as String,
+      incentives: json['incentives'] == null
+          ? null
+          : IncentiveCalculation.fromJson(
+              json['incentives'] as Map<String, dynamic>,
+            ),
+      status: json['status'] as String,
     );
 
 Map<String, dynamic> _$OutreachDraftToJson(OutreachDraft instance) =>
     <String, dynamic>{
-      'salonName': instance.salonName,
-      'channel': instance.channel,
-      'subjectLine': instance.subjectLine,
+      'salon_id': instance.salonId,
       'hook': instance.hook,
-      'body': instance.body,
-      'postcardConcept': instance.postcardConcept,
+      'value_prop': instance.valueProp,
       'guardrail': instance.guardrail,
+      'full_message': instance.fullMessage,
+      'incentives': instance.incentives?.toJson(),
+      'status': instance.status,
     };

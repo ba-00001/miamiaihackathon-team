@@ -10,6 +10,7 @@ Simple Flask + Python version of the unified `MaRe` app.
 - role picker
 - role dashboards for internal, salon-owner, and client views
 - JSON endpoints for app state, agent state, and AWS image storage
+- JSON contract endpoints for salon profiles and outreach drafts
 - AWS S3-oriented storage service for picture uploads
 - Vercel-compatible Python entrypoint in `api/index.py`
 

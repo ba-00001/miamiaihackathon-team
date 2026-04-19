@@ -1,3 +1,62 @@
+from data.contracts import IncentiveCalculation, OutreachDraft, SalonProfile
+
+
+DEMO_SALON_PROFILES = [
+    SalonProfile(
+        id="salon-001",
+        name="Rosette Ritual House",
+        location="Miami, FL",
+        website_url="https://rosetteritualhouse.example",
+        instagram_handle="@rosetteritualhouse",
+        estimated_revenue="$1.8M-$2.4M",
+        aesthetic_tags=["Luxury ritual", "Scalp wellness", "Editorial retail"],
+        brands_carried=["Philip Martin's", "Prestige scalp care"],
+        compatibility_score=96,
+    ).to_dict(),
+    SalonProfile(
+        id="salon-002",
+        name="Casa de Soleil Salon Spa",
+        location="Palm Beach, FL",
+        website_url="https://casadesoleil.example",
+        instagram_handle="@casadesoleilspa",
+        estimated_revenue="$2.7M-$3.1M",
+        aesthetic_tags=["Italian interiors", "Wellness-first", "Multi-location"],
+        brands_carried=["Philip Martin's", "Luxury treatment menus"],
+        compatibility_score=93,
+    ).to_dict(),
+]
+
+DEMO_OUTREACH_DRAFTS = [
+    OutreachDraft(
+        salon_id="salon-001",
+        hook="Your social feed already feels like a private-membership scalp club, which is rare.",
+        value_prop="MaRe pairs Italian luxury formulas with a diagnostic camera that helps stylists move from generic recommendation to visual proof while protecting premium positioning.",
+        guardrail="Only position MaRe as a selective partnership for salons that are luxury enough.",
+        full_message="Your social feed already feels like a private-membership scalp club, which is rare. MaRe pairs Italian luxury formulas with a diagnostic camera that helps stylists move from generic recommendation to visual proof. The result is stronger loyalty, higher retail conversion, and a partner story that still feels exclusive.",
+        incentives=IncentiveCalculation(
+            current_retail_conversion_rate=0.12,
+            projected_retail_conversion_rate=0.41,
+            estimated_ancillary_revenue=186000.0,
+            roi_multiplier=3.4,
+        ),
+        status="approved",
+    ).to_dict(),
+    OutreachDraft(
+        salon_id="salon-002",
+        hook="The wellness language in your brand already sets up the MaRe Eye perfectly.",
+        value_prop="We help salons turn scalp consultations into a visible, educational experience that lifts confidence and retail attachment without diluting a luxury service menu.",
+        guardrail="Keep the message high-end, consultative, and specific to their visual brand.",
+        full_message="The wellness language in your brand already sets up the MaRe Eye perfectly. We help salons turn scalp consultations into a visible, educational experience that lifts confidence and retail attachment. Instead of adding noise, MaRe sharpens your premium positioning with a systematic ritual clients can see and repeat.",
+        incentives=IncentiveCalculation(
+            current_retail_conversion_rate=0.15,
+            projected_retail_conversion_rate=0.43,
+            estimated_ancillary_revenue=224000.0,
+            roi_multiplier=3.9,
+        ),
+        status="needs_review",
+    ).to_dict(),
+]
+
 MARE_APP_SNAPSHOT = {
     "appName": "MaRe",
     "tagline": "One luxury scalp-health app for guests, MaRe growth teams, partner salons, and clients.",
@@ -237,6 +296,10 @@ MARE_APP_SNAPSHOT = {
             "Block sends or publishes until a human approves uncertain output.",
             "Keep the yellow dot visible anywhere AI or fallback logic is active.",
         ],
+    },
+    "internalData": {
+        "salonProfiles": DEMO_SALON_PROFILES,
+        "outreachDrafts": DEMO_OUTREACH_DRAFTS,
     },
 }
 

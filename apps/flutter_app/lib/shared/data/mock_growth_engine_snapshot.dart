@@ -73,22 +73,32 @@ const _snapshotJson = r'''
   ],
   "outreachDrafts": [
     {
-      "salonName": "Rosette Ritual House",
-      "channel": "Email",
-      "subjectLine": "A retail conversion ritual your Brickell clients would actually trust",
+      "salonId": "salon-001",
       "hook": "Your social feed already feels like a private-membership scalp club, which is rare.",
-      "body": "MaRe pairs Italian luxury formulas with a diagnostic camera that helps stylists move from generic recommendation to visual proof. The result is stronger loyalty, higher retail conversion, and a partner story that still feels exclusive.",
-      "postcardConcept": "Embossed ivory postcard with a single yellow status seal and the line: A system worthy of your service floor.",
-      "guardrail": "Only position MaRe as a selective partnership for salons that are luxury enough."
+      "valueProp": "MaRe pairs Italian luxury formulas with a diagnostic camera that helps stylists move from generic recommendation to visual proof while protecting premium brand positioning.",
+      "guardrail": "Only position MaRe as a selective partnership for salons that are luxury enough.",
+      "fullMessage": "Your social feed already feels like a private-membership scalp club, which is rare. MaRe pairs Italian luxury formulas with a diagnostic camera that helps stylists move from generic recommendation to visual proof. The result is stronger loyalty, higher retail conversion, and a partner story that still feels exclusive.",
+      "incentives": {
+        "currentRetailConversionRate": 0.12,
+        "projectedRetailConversionRate": 0.41,
+        "estimatedAncillaryRevenue": 186000.0,
+        "roiMultiplier": 3.4
+      },
+      "status": "approved"
     },
     {
-      "salonName": "Casa de Soleil Salon Spa",
-      "channel": "Postcard + DM",
-      "subjectLine": "Palm Beach luxury clients are ready for scalp wellness with proof",
+      "salonId": "salon-002",
       "hook": "The wellness language in your brand already sets up the MaRe Eye perfectly.",
-      "body": "We help salons turn scalp consultations into a visible, educational experience that lifts confidence and retail attachment. Instead of adding noise, MaRe sharpens your premium positioning with a systematic ritual clients can see and repeat.",
-      "postcardConcept": "Satin cream stock featuring a gold circle, product silhouette, and a short ROI story.",
-      "guardrail": "Keep the message high-end, consultative, and specific to their visual brand."
+      "valueProp": "We help salons turn scalp consultations into a visible, educational experience that lifts confidence and retail attachment without diluting a luxury service menu.",
+      "guardrail": "Keep the message high-end, consultative, and specific to their visual brand.",
+      "fullMessage": "The wellness language in your brand already sets up the MaRe Eye perfectly. We help salons turn scalp consultations into a visible, educational experience that lifts confidence and retail attachment. Instead of adding noise, MaRe sharpens your premium positioning with a systematic ritual clients can see and repeat.",
+      "incentives": {
+        "currentRetailConversionRate": 0.15,
+        "projectedRetailConversionRate": 0.43,
+        "estimatedAncillaryRevenue": 224000.0,
+        "roiMultiplier": 3.9
+      },
+      "status": "needs_review"
     }
   ],
   "contentAssets": [

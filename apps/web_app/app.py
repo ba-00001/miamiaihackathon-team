@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 
-from data.mock_data import AGENT_STATE, MARE_APP_SNAPSHOT
+from data.mock_data import AGENT_STATE, DEMO_OUTREACH_DRAFTS, DEMO_SALON_PROFILES, MARE_APP_SNAPSHOT
 from services.aws_storage import S3ImageStorageService
 
 
@@ -34,6 +34,16 @@ def snapshot():
 @app.get("/api/app-state")
 def app_state():
     return jsonify(MARE_APP_SNAPSHOT)
+
+
+@app.get("/api/internal/salon-profiles")
+def salon_profiles():
+    return jsonify(DEMO_SALON_PROFILES)
+
+
+@app.get("/api/internal/outreach-drafts")
+def outreach_drafts():
+    return jsonify(DEMO_OUTREACH_DRAFTS)
 
 
 @app.get("/api/agent")
