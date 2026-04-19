@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/theme.dart';
+import '../core/mare_theme.dart';
 import '../providers/generation_provider.dart';
 import '../widgets/parameter_form.dart';
 
@@ -30,96 +30,86 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> with SingleTick
   Widget build(BuildContext context) {
     final genState = ref.watch(genProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Miami AI Studio'),
-        centerTitle: false,
-        bottom: TabBar(
+    return Column(
+      children: [
+        TabBar(
           controller: _tabCtrl,
-          indicatorColor: AppColors.accent,
-          labelColor: AppColors.textPrimary,
-          unselectedLabelColor: AppColors.textMuted,
-          labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          indicatorColor: MareColors.ink,
+          labelColor: MareColors.ink,
+          unselectedLabelColor: MareColors.espresso,
+          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
           tabs: const [
-            Tab(text: 'SEEDANCE'),
+            Tab(text: 'SEEDANCE 2.0'),
             Tab(text: 'WAN 2.7'),
           ],
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: TabBarView(
-              controller: _tabCtrl,
-              children: _models.map((m) => _buildTab(m, genState)).toList(),
+        Expanded(
+          child: TabBarView(
+            controller: _tabCtrl,
+            children: _models.map((m) => _buildTab(m, genState)).toList(),
+          ),
+        ),
+        if (genState.status == GenStatus.loading)
+          Container(
+            padding: const EdgeInsets.all(16),
+            color: MareColors.pearl,
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: MareColors.ink)),
+                SizedBox(width: 12),
+                Text('Generating luxury assets… this takes 30-120s', style: TextStyle(color: MareColors.espresso, fontSize: 13)),
+              ],
             ),
           ),
-          // Status bar
-          if (genState.status == GenStatus.loading)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              color: AppColors.surface,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.accent)),
-                  SizedBox(width: 12),
-                  Text('Generating… this may take 30-120s', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-                ],
-              ),
+        if (genState.status == GenStatus.error)
+          Container(
+            padding: const EdgeInsets.all(14),
+            color: MareColors.error.withOpacity(0.1),
+            child: Row(
+              children: [
+                const Icon(Icons.error_outline, size: 16, color: MareColors.error),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    genState.error ?? 'Error',
+                    style: const TextStyle(color: MareColors.error, fontSize: 13),
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 16, color: MareColors.error),
+                  onPressed: () => ref.read(genProvider.notifier).reset(),
+                ),
+              ],
             ),
-          if (genState.status == GenStatus.error)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(14),
-              color: AppColors.error.withOpacity(0.1),
-              child: Row(
-                children: [
-                  const Icon(Icons.error_outline, size: 16, color: AppColors.error),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      genState.error ?? 'Error',
-                      style: const TextStyle(color: AppColors.error, fontSize: 13),
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, size: 16, color: AppColors.error),
-                    onPressed: () => ref.read(genProvider.notifier).reset(),
-                  ),
-                ],
-              ),
+          ),
+        if (genState.status == GenStatus.success && genState.result != null)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: MareColors.sage.withOpacity(0.3),
+              border: const Border(top: BorderSide(color: MareColors.sage, width: 1)),
             ),
-          if (genState.status == GenStatus.success && genState.result != null)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: AppColors.success.withOpacity(0.08),
-                border: const Border(top: BorderSide(color: AppColors.success, width: 0.5)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: AppColors.success, size: 18),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Saved! ID #${genState.result!.id}  •  ${genState.result!.modelType}',
-                      style: const TextStyle(color: AppColors.success, fontSize: 13),
-                    ),
+            child: Row(
+              children: [
+                const Icon(Icons.check_circle, color: MareColors.ink, size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Asset Saved! ID #${genState.result!.id}',
+                    style: const TextStyle(color: MareColors.ink, fontSize: 13, fontWeight: FontWeight.w600),
                   ),
-                  TextButton(
-                    onPressed: () => ref.read(genProvider.notifier).reset(),
-                    child: const Text('Dismiss'),
-                  ),
-                ],
-              ),
+                ),
+                TextButton(
+                  onPressed: () => ref.read(genProvider.notifier).reset(),
+                  child: const Text('Dismiss', style: TextStyle(color: MareColors.ink)),
+                ),
+              ],
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 
@@ -154,18 +144,18 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> with SingleTick
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.accent.withOpacity(0.12),
+            color: MareColors.ink.withOpacity(0.06),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(icon, color: AppColors.accentLight, size: 22),
+          child: Icon(icon, color: MareColors.ink, size: 22),
         ),
         const SizedBox(width: 14),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: MareColors.ink)),
             const SizedBox(height: 2),
-            Text(subtitle, style: const TextStyle(fontSize: 13, color: AppColors.textMuted)),
+            Text(subtitle, style: const TextStyle(fontSize: 13, color: MareColors.espresso)),
           ],
         ),
       ],

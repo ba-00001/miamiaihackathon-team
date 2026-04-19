@@ -8,7 +8,6 @@ import '../data/models/generation_model.dart';
 class ApiService {
   static final String _base = AppConstants.apiBaseUrl;
 
-  // ── Generic POST (JSON) ────────────────────────────────
   static Future<Map<String, dynamic>> _post(
       String path, Map<String, dynamic> body) async {
     final uri = Uri.parse('$_base$path');
@@ -18,7 +17,7 @@ class ApiService {
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(body),
         )
-        .timeout(const Duration(minutes: 5)); // Modelslab can be slow
+        .timeout(const Duration(minutes: 5));
 
     if (response.statusCode >= 400) {
       try {
@@ -31,7 +30,6 @@ class ApiService {
     return jsonDecode(response.body);
   }
 
-  // ── Upload file bytes → S3, returns PUBLIC URL ─────────
   static Future<String> uploadFileBytes(
       Uint8List bytes, String filename, String mimeType) async {
     final uri = Uri.parse('$_base/api/upload');
@@ -48,17 +46,14 @@ class ApiService {
       throw Exception('Upload failed: $body');
     }
     final json = jsonDecode(body);
-    // Prefer public_url (direct S3 URL), fall back to presigned_url
     return (json['public_url'] ?? json['presigned_url']) as String;
   }
 
-  // ── Upload URL → S3, returns PUBLIC URL ────────────────
   static Future<String> uploadFromUrl(String url) async {
     final json = await _post('/api/upload', {'url': url});
     return (json['public_url'] ?? json['presigned_url']) as String;
   }
 
-  // ── Model endpoints ────────────────────────────────────
   static Future<GenerationModel> generateSeedance(
       Map<String, dynamic> params) async {
     final json = await _post('/api/seedance', params);
@@ -71,7 +66,6 @@ class ApiService {
     return GenerationModel.fromJson(json);
   }
 
-  // ── History ────────────────────────────────────────────
   static Future<List<GenerationModel>> getHistory({String? modelType}) async {
     String path = '/api/generations';
     if (modelType != null) path += '?model_type=$modelType';
@@ -82,9 +76,13 @@ class ApiService {
     return list.map((j) => GenerationModel.fromJson(j)).toList();
   }
 
-  // ── Delete ─────────────────────────────────────────────
   static Future<void> deleteGeneration(int id) async {
     final uri = Uri.parse('$_base/api/generations/$id');
     await http.delete(uri);
+  }
+
+  static Future<String> askGemini(String prompt) async {
+    final json = await _post('/api/agent', {'prompt': prompt});
+    return json['reply'] ?? 'No response';
   }
 }

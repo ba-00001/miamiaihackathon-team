@@ -1,13 +1,11 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import '../core/theme.dart';
+import '../core/mare_theme.dart';
 import '../services/api_service.dart';
 
 enum MediaUploadType { image, video, audio }
 
-/// Lets users provide media via file upload or URL paste.
-/// Uploads to S3 as public-read and returns the direct URL.
 class MediaUploadWidget extends StatefulWidget {
   final String label;
   final MediaUploadType type;
@@ -53,23 +51,17 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
 
   List<String> get _allowedExtensions {
     switch (widget.type) {
-      case MediaUploadType.image:
-        return ['png', 'jpg', 'jpeg', 'webp', 'gif'];
-      case MediaUploadType.video:
-        return ['mp4', 'webm', 'mov'];
-      case MediaUploadType.audio:
-        return ['mp3', 'wav', 'ogg', 'aac'];
+      case MediaUploadType.image: return ['png', 'jpg', 'jpeg', 'webp', 'gif'];
+      case MediaUploadType.video: return ['mp4', 'webm', 'mov'];
+      case MediaUploadType.audio: return ['mp3', 'wav', 'ogg', 'aac'];
     }
   }
 
   String get _mimePrefix {
     switch (widget.type) {
-      case MediaUploadType.image:
-        return 'image';
-      case MediaUploadType.video:
-        return 'video';
-      case MediaUploadType.audio:
-        return 'audio';
+      case MediaUploadType.image: return 'image';
+      case MediaUploadType.video: return 'video';
+      case MediaUploadType.audio: return 'audio';
     }
   }
 
@@ -132,7 +124,6 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
     });
 
     try {
-      // Re-host through our S3 so Modelslab can access it
       final publicUrl = await ApiService.uploadFromUrl(url);
       setState(() {
         _resolvedUrl = publicUrl;
@@ -140,7 +131,6 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
       });
       widget.onUrlReady(publicUrl);
     } catch (e) {
-      // Fallback: use the raw URL directly
       setState(() {
         _resolvedUrl = url;
         _isUploading = false;
@@ -168,9 +158,9 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
         Row(
           children: [
             Text(widget.label,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textSecondary)),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: MareColors.espresso)),
             if (!widget.required)
-              const Text(' (optional)', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+              const Text(' (optional)', style: TextStyle(fontSize: 11, color: MareColors.espresso)),
           ],
         ),
         const SizedBox(height: 8),
@@ -185,7 +175,7 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
               Expanded(
                 child: TextField(
                   controller: _urlCtrl,
-                  style: const TextStyle(fontSize: 12, color: AppColors.textPrimary),
+                  style: const TextStyle(fontSize: 12, color: MareColors.ink),
                   decoration: InputDecoration(
                     hintText: 'Or paste a public URL here…',
                     contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -193,11 +183,11 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
                         ? const Padding(
                             padding: EdgeInsets.all(10),
                             child: SizedBox(width: 16, height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.accent)),
+                              child: CircularProgressIndicator(strokeWidth: 2, color: MareColors.ink)),
                           )
                         : IconButton(
                             icon: const Icon(Icons.upload, size: 18),
-                            color: AppColors.accent,
+                            color: MareColors.ink,
                             onPressed: _useUrl,
                             tooltip: 'Upload to S3',
                           ),
@@ -214,14 +204,14 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.error.withOpacity(0.08),
+              color: MareColors.error.withOpacity(0.08),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Row(
               children: [
-                const Icon(Icons.error_outline, size: 14, color: AppColors.error),
+                const Icon(Icons.error_outline, size: 14, color: MareColors.error),
                 const SizedBox(width: 6),
-                Expanded(child: Text(_error!, style: const TextStyle(fontSize: 11, color: AppColors.error))),
+                Expanded(child: Text(_error!, style: const TextStyle(fontSize: 11, color: MareColors.error))),
               ],
             ),
           ),
@@ -237,29 +227,29 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 28),
         decoration: BoxDecoration(
-          color: AppColors.surfaceLight,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.border, width: 1),
+          color: MareColors.pearl,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: MareColors.border, width: 1),
         ),
         child: _isUploading
             ? const Column(children: [
                 SizedBox(width: 22, height: 22,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.accent)),
+                  child: CircularProgressIndicator(strokeWidth: 2, color: MareColors.ink)),
                 SizedBox(height: 10),
-                Text('Uploading…', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                Text('Uploading…', style: TextStyle(fontSize: 12, color: MareColors.espresso)),
               ])
             : Column(children: [
                 Icon(
                   widget.type == MediaUploadType.image ? Icons.image_outlined
                     : widget.type == MediaUploadType.video ? Icons.videocam_outlined
                     : Icons.audio_file_outlined,
-                  size: 28, color: AppColors.textMuted),
+                  size: 28, color: MareColors.espresso),
                 const SizedBox(height: 8),
                 Text('Click to upload ${widget.type.name}',
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
+                  style: const TextStyle(fontSize: 13, color: MareColors.ink, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
                 Text(_allowedExtensions.map((e) => '.$e').join('  '),
-                  style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                  style: const TextStyle(fontSize: 11, color: MareColors.espresso)),
               ]),
       ),
     );
@@ -269,42 +259,42 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.surfaceLight,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.success.withOpacity(0.3)),
+        color: MareColors.pearl,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: MareColors.sage.withOpacity(0.6), width: 1.5),
       ),
       child: Column(
         children: [
           if (_previewBytes != null && widget.type == MediaUploadType.image)
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(9)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
               child: Image.memory(_previewBytes!,
                 width: double.infinity, height: 160, fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => const SizedBox(height: 60,
-                  child: Center(child: Icon(Icons.broken_image, color: AppColors.textMuted)))),
+                  child: Center(child: Icon(Icons.broken_image, color: MareColors.espresso)))),
             ),
           Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                const Icon(Icons.check_circle, size: 16, color: AppColors.success),
+                const Icon(Icons.check_circle, size: 16, color: MareColors.sage),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(_previewName ?? 'Media ready',
-                        style: const TextStyle(fontSize: 12, color: AppColors.textPrimary),
+                        style: const TextStyle(fontSize: 12, color: MareColors.ink, fontWeight: FontWeight.w600),
                         overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 2),
-                      Text('Uploaded to S3 (public)',
-                        style: TextStyle(fontSize: 10, color: AppColors.success.withOpacity(0.7))),
+                      const Text('Uploaded to S3 (public)',
+                        style: TextStyle(fontSize: 10, color: MareColors.sage)),
                     ],
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close, size: 16),
-                  color: AppColors.textMuted, onPressed: _clear, tooltip: 'Remove',
+                  color: MareColors.espresso, onPressed: _clear, tooltip: 'Remove',
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 28, minHeight: 28)),
               ],

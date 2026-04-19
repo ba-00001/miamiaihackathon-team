@@ -6,11 +6,11 @@ class Generation(db.Model):
     __tablename__ = 'generations'
 
     id = Column(Integer, primary_key=True)
-    model_type = Column(String(50), nullable=False)       # seedance | wan
+    model_type = Column(String(50), nullable=False)
     prompt = Column(Text, nullable=False)
-    input_params = Column(Text)                            # full JSON payload
-    s3_key = Column(String(500))                           # private S3 object key
-    media_type = Column(String(20), default='video')       # video | image
+    input_params = Column(Text)
+    s3_key = Column(String(500))
+    media_type = Column(String(20), default='video')
     status = Column(String(20), default='completed')
     created_at = Column(DateTime, default=datetime.utcnow)
 

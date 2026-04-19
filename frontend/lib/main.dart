@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'core/theme.dart';
-import 'screens/home_screen.dart';
+import 'core/mare_theme.dart';
+import 'screens/dashboard_screen.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MiamiAIApp()));
+  runApp(const ProviderScope(child: MareGrowthEngineApp()));
 }
 
-class MiamiAIApp extends StatelessWidget {
-  const MiamiAIApp({super.key});
+class MareGrowthEngineApp extends StatelessWidget {
+  const MareGrowthEngineApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'MaRe',
       debugShowCheckedModeBanner: false,
-      title: 'Miami AI Studio',
-      theme: appTheme,
-      home: const HomeScreen(),
+      theme: buildMareTheme(),
+      home: const DashboardScreen(),
     );
   }
 }
