@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { buildImageUploadTarget, buildStorageConfig } from './storage.mjs';
 
 const snapshot = {
   generatedAt: '2026-04-19T10:45:00-04:00',
@@ -34,14 +35,26 @@ const agentResult = {
 createServer((request, response) => {
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Content-Type', 'application/json');
+  const url = new URL(request.url ?? '/', 'http://localhost:4300');
 
-  if (request.url === '/api/snapshot') {
+  if (url.pathname === '/api/snapshot') {
     response.end(JSON.stringify(snapshot));
     return;
   }
 
-  if (request.url === '/api/agent') {
+  if (url.pathname === '/api/agent') {
     response.end(JSON.stringify(agentResult));
+    return;
+  }
+
+  if (url.pathname === '/api/storage/config') {
+    response.end(JSON.stringify(buildStorageConfig()));
+    return;
+  }
+
+  if (url.pathname === '/api/storage/prepare-upload') {
+    const filename = url.searchParams.get('filename') ?? 'mare-image.jpg';
+    response.end(JSON.stringify(buildImageUploadTarget(filename)));
     return;
   }
 

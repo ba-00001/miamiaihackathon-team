@@ -14,6 +14,7 @@
 - Connect live prospecting sources such as Clay, Firecrawl, or salon datasets.
 - Add authentication and role-based review permissions.
 - Store generated assets, approval history, and fallback events in a database.
+- Move demo S3 targets to fully signed AWS upload flows and lifecycle policies.
 - Add real LLM integrations and prompt versioning for salon-lingo outreach.
 - Integrate image and video providers for production-grade assets.
 - Add retry queues, caching, and monitoring so AI failure does not stop the product.

@@ -34,11 +34,12 @@ Flutter app for live demos:
 
 ## Slide 6: Product Two
 
-Simple Vercel web app:
+Simple Flask web app:
 
-- easy to deploy
+- Python-based and easy to adapt
 - easy to share with judges or advisors
 - same business logic and same fallback story
+- AWS S3 used as the image-storage target for pictures and generated assets
 
 ## Slide 7: Why It Wins
 

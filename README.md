@@ -5,7 +5,7 @@ This repo is a hackathon-ready solution for the MaRe brief: help a luxury scalp-
 The solution is split into two demo products:
 
 - `apps/flutter_app`: a polished Flutter prototype for mobile/tablet demos.
-- `apps/web_app`: a simple Next.js web app that is easy to deploy on Vercel.
+- `apps/web_app`: a simple Flask + Python web app with AWS S3-oriented image storage.
 
 Both experiences tell the same business story:
 
@@ -33,9 +33,11 @@ apps/
     backend/          # Local mock backend for the Flutter solution
     agent/            # AI agent prompt + fallback rules
   web_app/
-    src/app/          # Next.js frontend + API routes
-    src/lib/agent/    # Web agent logic
-    public/images/    # Demo illustrations
+    app.py            # Flask entrypoint
+    templates/        # Server-rendered UI
+    static/           # CSS + demo images
+    services/         # AWS S3 storage service
+    api/              # Vercel-compatible Python entrypoint
 docs/
   architecture.md
   business-technical-todos.md
@@ -54,11 +56,11 @@ The Flutter app now includes:
 
 ## Web Notes
 
-The web app is Vercel-friendly and intentionally simple:
+The web app is intentionally simple and now uses Flask + Python:
 
-- Next.js App Router frontend.
-- API routes at `/api/snapshot` and `/api/agent`.
-- Shared data contracts mirrored from the Flutter side.
+- Flask server-rendered frontend.
+- API routes at `/api/snapshot`, `/api/agent`, and image storage endpoints.
+- AWS S3-oriented storage flow for pictures.
 - Same yellow-dot developer marker and same AI fallback story.
 
 ## AI Errors And Fallbacks
@@ -88,7 +90,7 @@ Key technical next steps:
 
 - replace mock data with live APIs and authenticated workflows
 - add persistent CRM state and approval history
-- connect real multimodal providers for video and image generation
+- connect real multimodal providers for video generation and live AWS S3 uploads
 - add analytics, audit logging, and role-based access
 - productionize tests, observability, and deployment pipelines
 
@@ -131,15 +133,20 @@ npm run dev
 
 ```bash
 cd apps/web_app
-npm install
-npm run dev
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python app.py
 ```
 
-For production:
+AWS picture storage env vars:
 
 ```bash
-cd apps/web_app
-npm run build
+AWS_S3_BUCKET=mare-demo-assets
+AWS_REGION=us-east-1
+AWS_S3_PREFIX=uploads
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
 ```
 
 ## Presentation

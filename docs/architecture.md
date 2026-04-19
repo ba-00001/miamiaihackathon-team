@@ -7,12 +7,14 @@
 - Frontend: Flutter dashboard for live demo use on mobile, tablet, or desktop.
 - Backend: lightweight Node mock service in `apps/flutter_app/backend/`.
 - AI agent: prompt and fallback playbook in `apps/flutter_app/agent/`.
+- Image storage: AWS S3-oriented upload prep endpoints for salon and content pictures.
 
 ### Web App
 
-- Frontend: Next.js App Router UI in `apps/web_app/src/components/`.
-- Backend: API routes in `apps/web_app/src/app/api/`.
-- AI agent: orchestration logic in `apps/web_app/src/lib/agent/`.
+- Frontend: Flask server-rendered UI in `apps/web_app/templates/`.
+- Backend: Flask JSON routes in `apps/web_app/app.py`.
+- AI agent: Python-backed state and fallback logic.
+- Image storage: AWS S3 service in `apps/web_app/services/aws_storage.py`.
 
 ## Core Domains
 
@@ -29,7 +31,8 @@
 3. Draft guarded outreach.
 4. Generate brand-safe content.
 5. Route uncertain outputs to human review.
-6. Show AI incidents with fallback guidance.
+6. Store picture assets in AWS S3-compatible object paths.
+7. Show AI incidents with fallback guidance.
 
 ## Why The Yellow Dot Exists
 

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MaRe Luxury Growth Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span>Luxury-grade AI growth system</div>
+          <h1>{{ snapshot.headline }}</h1>
+          <p class="hero-text">
+            Turn boutique proof into nationwide expansion by combining revenue-ranked salon discovery,
+            brand-safe outreach, scalable content creation, and AWS-backed image storage.
+          </p>
+          <div class="pill-row">
+            <span class="pill pill-sage">{{ snapshot.marketFocus }}</span>
+            <span class="pill pill-rose">Human approval required before send</span>
+            <span class="pill pill-gold">AWS image storage: {{ storage.mode }}</span>
+          </div>
+          <div class="agent-card">
+            <p class="label">AI agent state</p>
+            <p class="muted">{{ agent.status }} • {{ agent.tone }}</p>
+            <p>{{ agent.nextAction }}</p>
+            <p class="muted">{{ agent.fallbackMessage }}</p>
+          </div>
+        </div>
+        <div class="hero-art">
+          <img src="{{ url_for('static', filename='images/mare-hero-web.svg') }}" alt="Luxury growth illustration" />
+        </div>
+      </section>
+
+      <section class="metrics-grid">
+        <article class="metric-card">
+          <p class="muted">Luxury prospects</p>
+          <h2>{{ snapshot.metrics.luxuryProspects }}</h2>
+        </article>
+        <article class="metric-card">
+          <p class="muted">Approved outreach</p>
+          <h2>{{ snapshot.metrics.approvedOutreach }}</h2>
+        </article>
+        <article class="metric-card">
+          <p class="muted">Content assets ready</p>
+          <h2>{{ snapshot.metrics.contentAssetsReady }}</h2>
+        </article>
+        <article class="metric-card">
+          <p class="muted">Retail lift target</p>
+          <h2>{{ snapshot.metrics.retailLiftPotential }}</h2>
+        </article>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Global Prospector</h2>
+          <p>Rank high-revenue salons using aesthetic signals, location density, and retail readiness.</p>
+        </div>
+        <div class="grid three-up">
+          {% for prospect in snapshot.prospects %}
+          <article class="content-card">
+            <div class="card-top">
+              <div>
+                <h3>{{ prospect.name }}</h3>
+                <p class="muted">{{ prospect.cityState }} • {{ prospect.revenueBand }} • {{ prospect.locations }} location(s)</p>
+              </div>
+              <div class="fit-chip"><span class="status-dot small"></span>{{ prospect.fitScore }} fit</div>
+            </div>
+            <p>{{ prospect.socialHook }}</p>
+            <div class="pill-row compact">
+              {% for reason in prospect.reasons %}
+              <span class="pill">{{ reason }}</span>
+              {% endfor %}
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="grid two-up">
+        <div class="section-card">
+          <div class="section-header">
+            <h2>Luxury Outreach</h2>
+            <p>Human-in-the-loop drafts that sound like salon insiders, not automation.</p>
+          </div>
+          <div class="stack">
+            {% for draft in snapshot.outreachDrafts %}
+            <article class="content-card">
+              <h3>{{ draft.salonName }}</h3>
+              <p class="muted">{{ draft.channel }} • {{ draft.subjectLine }}</p>
+              <p>{{ draft.hook }}</p>
+              <p class="muted">{{ draft.body }}</p>
+              <p><strong>Postcard:</strong> {{ draft.postcardConcept }}</p>
+              <p><strong>Guardrail:</strong> {{ draft.guardrail }}</p>
+            </article>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-header">
+            <h2>Creative Engine</h2>
+            <p>AI-search-ready content built around scalp wellness, luxury rituals, and conversion.</p>
+          </div>
+          <div class="stack">
+            {% for asset in snapshot.contentAssets %}
+            <article class="content-card">
+              <div class="pill-row compact">
+                <span class="pill pill-sage">{{ asset.format }}</span>
+                <span class="pill pill-gold">{{ asset.status }}</span>
+              </div>
+              <h3>{{ asset.title }}</h3>
+              <p class="muted">Primary keyword: {{ asset.primaryKeyword }}</p>
+              <p>{{ asset.openingHook }}</p>
+              <ul class="list">
+                {% for point in asset.talkingPoints %}
+                <li><span class="status-dot tiny"></span>{{ point }}</li>
+                {% endfor %}
+              </ul>
+              <p><strong>CTA:</strong> {{ asset.callToAction }}</p>
+            </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="grid two-up">
+        <div class="section-card warning-card">
+          <div class="section-header">
+            <h2>AI Watchtower</h2>
+            <p>Errors surface as guided AI incidents instead of silent failures.</p>
+          </div>
+          <article class="content-card warning-inner">
+            <h3><span class="status-dot"></span>{{ snapshot.aiError.title }}</h3>
+            <p>{{ snapshot.aiError.description }}</p>
+            <div class="stack compact-stack">
+              {% for fallback in snapshot.aiError.fallbacks %}
+              <p class="muted"><strong>Fallback:</strong> {{ fallback }}</p>
+              {% endfor %}
+            </div>
+          </article>
+        </div>
+
+        <div class="section-card">
+          <div class="section-header">
+            <h2>AWS Image Storage</h2>
+            <p>Both versions use AWS S3 as the picture storage target, with safe fallback when live credentials are missing.</p>
+          </div>
+          <article class="content-card">
+            <p><strong>Provider:</strong> {{ storage.provider }}</p>
+            <p><strong>Bucket:</strong> {{ storage.bucket }}</p>
+            <p><strong>Region:</strong> {{ storage.region }}</p>
+            <p><strong>Prefix:</strong> {{ storage.prefix }}</p>
+            <p><strong>Mode:</strong> {{ storage.mode }}</p>
+            <p class="muted">{{ storage.fallback }}</p>
+            <img class="flow-image" src="{{ url_for('static', filename='images/growth-flow-web.svg') }}" alt="AWS and growth flow illustration" />
+          </article>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Approval Queue</h2>
+          <p>Every risky action has a clear owner, next action, and fallback lane.</p>
+        </div>
+        <div class="grid three-up">
+          {% for item in snapshot.reviewQueue %}
+          <article class="content-card">
+            <div class="card-top">
+              <h3>{{ item.lane }}</h3>
+              <span class="pill {% if item.status == 'Approved' %}pill-sage{% else %}pill-gold{% endif %}">{{ item.status }}</span>
+            </div>
+            <p><strong>Owner:</strong> {{ item.owner }}</p>
+            <p><strong>Next:</strong> {{ item.nextAction }}</p>
+            <p><strong>Fallback:</strong> {{ item.fallback }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Developer Marker</h2>
+          <p>The yellow circle is the visual cue that this is the MaRe demo environment.</p>
+        </div>
+        <div class="developer-marker">
+          <span class="status-dot large"></span>
+          <p class="muted">
+            Whenever you see the yellow dot, you are looking at live AI-assisted, mocked AI, or fallback-enabled surfaces that still need human review.
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

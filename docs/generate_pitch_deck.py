@@ -58,8 +58,8 @@ SLIDES = [
     (
         "Web App",
         [
-            "Simple Next.js app designed for easy Vercel deployment.",
-            "Uses API routes for backend behavior and an in-repo agent module for guarded output.",
+            "Simple Flask + Python app for the lightweight web version.",
+            "Includes Flask routes, a Vercel-compatible Python entrypoint, and AWS S3-oriented image storage.",
             "Matches the Flutter business story so judges can review it instantly in browser.",
         ],
     ),
@@ -76,7 +76,7 @@ SLIDES = [
         "Architecture",
         [
             "Frontend + backend + AI agent in both solution paths.",
-            "Shared domain model: prospect, outreach, content, review, AI error.",
+            "Shared domain model: prospect, outreach, content, review, AI error, and image storage.",
             "Yellow dot means AI-controlled or fallback-enabled surface.",
         ],
     ),
@@ -93,7 +93,7 @@ SLIDES = [
         "Roadmap",
         [
             "Connect live salon datasets and verification providers.",
-            "Integrate real multimodal generation for image and video content.",
+            "Integrate real multimodal generation and fully signed AWS uploads for images and video assets.",
             "Add CRM history, analytics, permissions, and production observability.",
             "Deploy regional expansion playbooks nationwide.",
         ],

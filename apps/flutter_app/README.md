@@ -15,6 +15,7 @@ Platforms enabled:
 - mock business data
 - local backend stub in `backend/`
 - AI prompt and fallback notes in `agent/`
+- AWS S3-oriented image storage endpoints for picture uploads
 
 ## Run
 
@@ -39,4 +40,12 @@ Run on Flutter Web:
 
 ```bash
 flutter run -d chrome
+```
+
+AWS image storage env vars for the backend:
+
+```bash
+AWS_S3_BUCKET=mare-demo-assets
+AWS_REGION=us-east-1
+AWS_S3_PREFIX=uploads
 ```
