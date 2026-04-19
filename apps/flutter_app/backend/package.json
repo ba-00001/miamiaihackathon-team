@@ -1,0 +1,8 @@
+{
+  "name": "mare-flutter-backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs"
+  }
+}
