@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../shared/models/models.dart';
-import '../../shared/services/demo_repository.dart';
+import '../../shared/services/mare_app_repository.dart';
 import '../../theme/mare_theme.dart';
+
+enum _MareView { welcome, guest, signIn, rolePicker, roleDashboard }
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -13,13 +15,25 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  late Future<GrowthEngineSnapshot> _snapshotFuture;
-  final _repository = const DemoRepository();
+  late Future<MareAppSnapshot> _snapshotFuture;
+  final _repository = const MareAppRepository();
+  final _emailController = TextEditingController(text: 'demo@mare.app');
+  final _passwordController = TextEditingController(text: 'luxury-demo');
+
+  _MareView _view = _MareView.welcome;
+  String? _selectedRoleId;
 
   @override
   void initState() {
     super.initState();
     _snapshotFuture = _repository.loadSnapshot();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   Future<void> _refresh() async {
@@ -29,10 +43,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
     await _snapshotFuture;
   }
 
+  void _goToGuest() {
+    setState(() {
+      _selectedRoleId = null;
+      _view = _MareView.guest;
+    });
+  }
+
+  void _goToSignIn() {
+    setState(() {
+      _selectedRoleId = null;
+      _view = _MareView.signIn;
+    });
+  }
+
+  void _goToRolePicker() {
+    setState(() {
+      _view = _MareView.rolePicker;
+    });
+  }
+
+  void _selectRole(String roleId) {
+    setState(() {
+      _selectedRoleId = roleId;
+      _view = _MareView.roleDashboard;
+    });
+  }
+
+  void _goHome() {
+    setState(() {
+      _selectedRoleId = null;
+      _view = _MareView.welcome;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<GrowthEngineSnapshot>(
+      body: FutureBuilder<MareAppSnapshot>(
         future: _snapshotFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
@@ -44,117 +92,74 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
 
           final data = snapshot.data!;
+          RoleExperience? currentRole;
+          if (_selectedRoleId != null) {
+            for (final role in data.roles) {
+              if (role.id == _selectedRoleId) {
+                currentRole = role;
+                break;
+              }
+            }
+          }
+
           return RefreshIndicator(
             onRefresh: _refresh,
-            child: CustomScrollView(
-              slivers: [
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
-                  sliver: SliverList.list(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(18, 22, 18, 40),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1240),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _HeroSection(data: data),
-                      const SizedBox(height: 18),
-                      _MetricsSection(metrics: data.metrics),
-                      const SizedBox(height: 18),
-                      _SectionContainer(
-                        title: 'Global Prospector',
-                        subtitle:
-                            'Rank high-revenue salons using aesthetic signals, location density, and retail readiness.',
-                        child: Column(
-                          children: data.prospects
-                              .map(
-                                (prospect) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: _ProspectCard(prospect: prospect),
-                                ),
-                              )
-                              .toList(),
-                        ),
+                      _TopBar(
+                        appName: data.appName,
+                        onHome: _goHome,
+                        onGuest: _goToGuest,
+                        onSignIn: _goToSignIn,
+                        onRolePicker: _goToRolePicker,
+                        view: _view,
+                        selectedRoleTitle: currentRole?.title,
                       ),
                       const SizedBox(height: 18),
-                      _TwoColumnSection(
-                        left: _SectionContainer(
-                          title: 'Luxury Outreach',
-                          subtitle:
-                              'Human-in-the-loop drafts that sound like salon insiders, not automation.',
-                          child: Column(
-                            children: data.outreachDrafts
-                                .map(
-                                  (draft) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
-                                    child: _OutreachCard(draft: draft),
-                                  ),
-                                )
-                                .toList(),
+                      switch (_view) {
+                        _MareView.welcome => _WelcomeView(
+                          data: data,
+                          onGuest: _goToGuest,
+                          onSignIn: _goToSignIn,
+                        ),
+                        _MareView.guest => _GuestView(
+                          guest: data.guest,
+                          onSignIn: _goToSignIn,
+                        ),
+                        _MareView.signIn => _SignInView(
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                          onContinue: _goToRolePicker,
+                          onGuest: _goToGuest,
+                        ),
+                        _MareView.rolePicker => _RolePickerView(
+                          roles: data.roles,
+                          onRoleSelected: _selectRole,
+                        ),
+                        _MareView.roleDashboard when currentRole != null =>
+                          _RoleDashboardView(
+                            role: currentRole,
+                            aiNotice: data.aiNotice,
+                            storage: data.storage,
+                            onRolePicker: _goToRolePicker,
                           ),
+                        _ => _WelcomeView(
+                          data: data,
+                          onGuest: _goToGuest,
+                          onSignIn: _goToSignIn,
                         ),
-                        right: _SectionContainer(
-                          title: 'Creative Engine',
-                          subtitle:
-                              'AI-search-ready content built around scalp wellness, luxury rituals, and conversion.',
-                          child: Column(
-                            children: data.contentAssets
-                                .map(
-                                  (asset) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
-                                    child: _ContentCard(asset: asset),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 18),
-                      _TwoColumnSection(
-                        left: _SectionContainer(
-                          title: 'AI Watchtower',
-                          subtitle:
-                              'Errors surface as guided AI incidents instead of silent failures.',
-                          child: _AiErrorCard(error: data.aiError),
-                        ),
-                        right: _SectionContainer(
-                          title: 'Approval Queue',
-                          subtitle:
-                              'Every risky action has a clear owner, next action, and fallback lane.',
-                          child: Column(
-                            children: data.reviewQueue
-                                .map(
-                                  (item) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
-                                    child: _ReviewCard(item: item),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 18),
-                      _SectionContainer(
-                        title: 'Developer Marker',
-                        subtitle:
-                            'The yellow circle is the visual cue that this is the MaRe demo environment.',
-                        child: Row(
-                          children: [
-                            const _StatusDot(size: 18),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                'Whenever you see the yellow dot, you are looking at live AI-assisted or mock AI-controlled surfaces that need brand review.',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            SvgPicture.asset(
-                              'assets/images/growth_flow.svg',
-                              width: 112,
-                            ),
-                          ],
-                        ),
-                      ),
+                      },
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
           );
         },
@@ -163,14 +168,385 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-class _HeroSection extends StatelessWidget {
-  const _HeroSection({required this.data});
+class _TopBar extends StatelessWidget {
+  const _TopBar({
+    required this.appName,
+    required this.onHome,
+    required this.onGuest,
+    required this.onSignIn,
+    required this.onRolePicker,
+    required this.view,
+    required this.selectedRoleTitle,
+  });
 
-  final GrowthEngineSnapshot data;
+  final String appName;
+  final VoidCallback onHome;
+  final VoidCallback onGuest;
+  final VoidCallback onSignIn;
+  final VoidCallback onRolePicker;
+  final _MareView view;
+  final String? selectedRoleTitle;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        child: Wrap(
+          runSpacing: 12,
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            InkWell(
+              onTap: onHome,
+              borderRadius: BorderRadius.circular(20),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const _StatusDot(size: 16),
+                  const SizedBox(width: 10),
+                  Text(
+                    appName,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ],
+              ),
+            ),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                _ToolbarAction(
+                  label: 'Guest',
+                  selected: view == _MareView.guest,
+                  onPressed: onGuest,
+                ),
+                _ToolbarAction(
+                  label: 'Sign In',
+                  selected: view == _MareView.signIn,
+                  onPressed: onSignIn,
+                ),
+                _ToolbarAction(
+                  label: selectedRoleTitle ?? 'Role Picker',
+                  selected:
+                      view == _MareView.rolePicker ||
+                      view == _MareView.roleDashboard,
+                  onPressed: onRolePicker,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WelcomeView extends StatelessWidget {
+  const _WelcomeView({
+    required this.data,
+    required this.onGuest,
+    required this.onSignIn,
+  });
+
+  final MareAppSnapshot data;
+  final VoidCallback onGuest;
+  final VoidCallback onSignIn;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _HeroCard(
+          title: data.appName,
+          subtitle: data.tagline,
+          description:
+              'Welcome into one unified MaRe app. Guests can explore the brand, signed-in users can pick their role, and every role-specific experience stays inside the same luxury shell.',
+          pills: [
+            'Guest mode available',
+            'Role selection after sign in',
+            'AWS S3 media storage',
+          ],
+          actions: [
+            FilledButton(
+              onPressed: onGuest,
+              style: FilledButton.styleFrom(backgroundColor: MareColors.ink),
+              child: const Text('Continue as Guest'),
+            ),
+            OutlinedButton(
+              onPressed: onSignIn,
+              child: const Text('Sign In to Choose Role'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 18),
+        _ResponsiveCards(
+          cards: [
+            _ActionCard(
+              title: 'Guest Experience',
+              subtitle: 'No sign-in required',
+              detail:
+                  'Explore luxury rituals, public education, partner salon discovery, and partner application entry points.',
+              tags: data.guest.highlights,
+            ),
+            ...data.roles.map(
+              (role) => _ActionCard(
+                title: role.title,
+                subtitle: role.audience,
+                detail: role.summary,
+                tags: role.quickActions,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _GuestView extends StatelessWidget {
+  const _GuestView({required this.guest, required this.onSignIn});
+
+  final GuestExperience guest;
+  final VoidCallback onSignIn;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _HeroCard(
+          title: 'Guest Mode',
+          subtitle: guest.title,
+          description: guest.description,
+          pills: guest.highlights,
+          actions: [
+            FilledButton(
+              onPressed: onSignIn,
+              style: FilledButton.styleFrom(backgroundColor: MareColors.ink),
+              child: const Text('Sign In for Role Access'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 18),
+        ...guest.sections.map(
+          (section) => Padding(
+            padding: const EdgeInsets.only(bottom: 18),
+            child: _ExperienceSectionCard(section: section),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SignInView extends StatelessWidget {
+  const _SignInView({
+    required this.emailController,
+    required this.passwordController,
+    required this.onContinue,
+    required this.onGuest,
+  });
+
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final VoidCallback onContinue;
+  final VoidCallback onGuest;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _HeroCard(
+          title: 'Sign In',
+          subtitle: 'One MaRe identity, multiple role experiences',
+          description:
+              'Sign in once, then choose the role you want for this session. A single user can hold multiple roles such as salon owner and client.',
+          pills: const ['Internal', 'Salon Owner', 'Client'],
+          actions: [
+            FilledButton(
+              onPressed: onContinue,
+              style: FilledButton.styleFrom(backgroundColor: MareColors.ink),
+              child: const Text('Continue to Role Selection'),
+            ),
+            TextButton(
+              onPressed: onGuest,
+              child: const Text('Stay in Guest Mode'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 18),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Mock sign-in for the hackathon demo',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 14),
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  'This mock auth step demonstrates the flow only. In production it should route through the shared MaRe auth backend and role service.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RolePickerView extends StatelessWidget {
+  const _RolePickerView({required this.roles, required this.onRoleSelected});
+
+  final List<RoleExperience> roles;
+  final ValueChanged<String> onRoleSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _HeroCard(
+          title: 'Role Selection',
+          subtitle: 'Pick the MaRe experience for this session',
+          description:
+              'The same app routes into different dashboards based on role. Users with multiple roles can switch without leaving MaRe.',
+          pills: roles.map((role) => role.title).toList(),
+        ),
+        const SizedBox(height: 18),
+        _ResponsiveCards(
+          cards: roles
+              .map(
+                (role) => _ActionCard(
+                  title: role.title,
+                  subtitle: role.audience,
+                  detail: role.summary,
+                  tags: role.quickActions,
+                  action: FilledButton(
+                    onPressed: () => onRoleSelected(role.id),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: MareColors.ink,
+                    ),
+                    child: const Text('Open Role Dashboard'),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ],
+    );
+  }
+}
+
+class _RoleDashboardView extends StatelessWidget {
+  const _RoleDashboardView({
+    required this.role,
+    required this.aiNotice,
+    required this.storage,
+    required this.onRolePicker,
+  });
+
+  final RoleExperience role;
+  final AiErrorState aiNotice;
+  final StorageProfile storage;
+  final VoidCallback onRolePicker;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _HeroCard(
+          title: role.title,
+          subtitle: role.heroTitle,
+          description: role.heroDescription,
+          pills: role.quickActions,
+          actions: [
+            FilledButton(
+              onPressed: onRolePicker,
+              style: FilledButton.styleFrom(backgroundColor: MareColors.ink),
+              child: const Text('Switch Role'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 18),
+        ...role.sections.map(
+          (section) => Padding(
+            padding: const EdgeInsets.only(bottom: 18),
+            child: _ExperienceSectionCard(section: section),
+          ),
+        ),
+        _ResponsiveCards(
+          cards: [
+            _AiNoticeCard(aiNotice: aiNotice),
+            _StorageCard(storage: storage),
+          ],
+        ),
+        const SizedBox(height: 18),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(22),
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                const _StatusDot(size: 18),
+                Text(
+                  'Yellow dot = AI-managed, fallback-enabled, or approval-sensitive surface.',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                SvgPicture.asset('assets/images/growth_flow.svg', width: 140),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HeroCard extends StatelessWidget {
+  const _HeroCard({
+    required this.title,
+    required this.subtitle,
+    required this.description,
+    required this.pills,
+    this.actions = const [],
+  });
+
+  final String title;
+  final String subtitle;
+  final String description;
+  final List<String> pills;
+  final List<Widget> actions;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
@@ -184,168 +560,81 @@ class _HeroSection extends StatelessWidget {
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final vertical = constraints.maxWidth < 860;
-          final content = [
-            Expanded(
-              flex: vertical ? 0 : 6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          final stacked = constraints.maxWidth < 860;
+          final illustration = SvgPicture.asset(
+            'assets/images/mare_hero.svg',
+            fit: BoxFit.contain,
+            height: stacked ? 180 : 240,
+          );
+
+          final textContent = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 10,
+                runSpacing: 8,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const _StatusDot(),
-                      const SizedBox(width: 10),
-                      Text(
-                        'Luxury-grade AI growth system',
-                        style: theme.textTheme.titleLarge,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 18),
-                  Text(data.headline, style: theme.textTheme.headlineLarge),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Turn boutique proof into nationwide expansion by combining revenue-ranked salon discovery, brand-safe outreach, and scalable luxury content creation.',
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      _Pill(label: data.marketFocus, color: MareColors.sage),
-                      _Pill(
-                        label: 'Human approval required before send',
-                        color: MareColors.rose,
-                      ),
-                      _Pill(
-                        label: 'Updated ${data.generatedAt.substring(0, 10)}',
-                        color: const Color(0xFFFFF0B8),
-                      ),
-                    ],
-                  ),
+                  const _StatusDot(),
+                  Text(title, style: Theme.of(context).textTheme.titleLarge),
                 ],
               ),
-            ),
-            const SizedBox(width: 20, height: 20),
-            Expanded(
-              flex: vertical ? 0 : 4,
-              child: SvgPicture.asset(
-                'assets/images/mare_hero.svg',
-                fit: BoxFit.contain,
-                height: 260,
+              const SizedBox(height: 16),
+              Text(
+                subtitle,
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontSize: stacked ? 34 : null,
+                ),
               ),
-            ),
-          ];
+              const SizedBox(height: 16),
+              Text(description, style: Theme.of(context).textTheme.bodyLarge),
+              const SizedBox(height: 18),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: pills
+                    .map(
+                      (pill) => _Pill(
+                        label: pill,
+                        color: pill.contains('AWS')
+                            ? const Color(0xFFFFF0B8)
+                            : MareColors.sage,
+                      ),
+                    )
+                    .toList(),
+              ),
+              if (actions.isNotEmpty) ...[
+                const SizedBox(height: 20),
+                Wrap(spacing: 12, runSpacing: 12, children: actions),
+              ],
+            ],
+          );
 
-          return vertical
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: content,
-                )
-              : Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: content,
-                );
+          if (stacked) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [textContent, const SizedBox(height: 18), illustration],
+            );
+          }
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(flex: 6, child: textContent),
+              const SizedBox(width: 20),
+              Expanded(flex: 4, child: illustration),
+            ],
+          );
         },
       ),
     );
   }
 }
 
-class _MetricsSection extends StatelessWidget {
-  const _MetricsSection({required this.metrics});
+class _ExperienceSectionCard extends StatelessWidget {
+  const _ExperienceSectionCard({required this.section});
 
-  final MetricSummary metrics;
-
-  @override
-  Widget build(BuildContext context) {
-    final cards = [
-      ('Luxury prospects', '${metrics.luxuryProspects}'),
-      ('Approved outreach', '${metrics.approvedOutreach}'),
-      ('Content assets ready', '${metrics.contentAssetsReady}'),
-      ('Retail lift target', metrics.retailLiftPotential),
-    ];
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final crossAxisCount = constraints.maxWidth < 720 ? 2 : 4;
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: cards.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            childAspectRatio: 1.6,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-          ),
-          itemBuilder: (context, index) {
-            final item = cards[index];
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      item.$1,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    Text(
-                      item.$2,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class _TwoColumnSection extends StatelessWidget {
-  const _TwoColumnSection({required this.left, required this.right});
-
-  final Widget left;
-  final Widget right;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth < 900) {
-          return Column(children: [left, const SizedBox(height: 18), right]);
-        }
-
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: left),
-            const SizedBox(width: 18),
-            Expanded(child: right),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _SectionContainer extends StatelessWidget {
-  const _SectionContainer({
-    required this.title,
-    required this.subtitle,
-    required this.child,
-  });
-
-  final String title;
-  final String subtitle;
-  final Widget child;
+  final ExperienceSection section;
 
   @override
   Widget build(BuildContext context) {
@@ -355,11 +644,21 @@ class _SectionContainer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+              section.title,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             const SizedBox(height: 8),
-            Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
+            Text(
+              section.subtitle,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             const SizedBox(height: 18),
-            child,
+            _ResponsiveCards(
+              cards: section.cards
+                  .map((card) => _ExperienceCardView(card: card))
+                  .toList(),
+            ),
           ],
         ),
       ),
@@ -367,270 +666,294 @@ class _SectionContainer extends StatelessWidget {
   }
 }
 
-class _ProspectCard extends StatelessWidget {
-  const _ProspectCard({required this.prospect});
+class _ResponsiveCards extends StatelessWidget {
+  const _ResponsiveCards({required this.cards});
 
-  final ProspectSignal prospect;
+  final List<Widget> cards;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFCF6),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE8DED0)),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final cardWidth = width >= 1100
+            ? (width - 24) / 3
+            : width >= 760
+            ? (width - 16) / 2
+            : width;
+
+        return Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: cards
+              .map(
+                (card) => SizedBox(
+                  width: cardWidth.clamp(260, 420).toDouble(),
+                  child: card,
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
+  }
+}
+
+class _ActionCard extends StatelessWidget {
+  const _ActionCard({
+    required this.title,
+    required this.subtitle,
+    required this.detail,
+    required this.tags,
+    this.action,
+  });
+
+  final String title;
+  final String subtitle;
+  final String detail;
+  final List<String> tags;
+  final Widget? action;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 8),
+            Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(height: 12),
+            Text(detail, style: Theme.of(context).textTheme.bodyLarge),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: tags
+                  .map(
+                    (tag) => _Pill(label: tag, color: const Color(0xFFF5EEE2)),
+                  )
+                  .toList(),
+            ),
+            if (action != null) ...[const SizedBox(height: 16), action!],
+          ],
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  prospect.name,
+    );
+  }
+}
+
+class _ExperienceCardView extends StatelessWidget {
+  const _ExperienceCardView({required this.card});
+
+  final ExperienceCard card;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(card.title, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 6),
+            Text(card.subtitle, style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(height: 12),
+            Text(card.detail, style: Theme.of(context).textTheme.bodyLarge),
+            if (card.stats.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: card.stats
+                    .map(
+                      (stat) =>
+                          _StatBadge(label: stat.label, value: stat.value),
+                    )
+                    .toList(),
+              ),
+            ],
+            if (card.tags.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: card.tags
+                    .map(
+                      (tag) =>
+                          _Pill(label: tag, color: const Color(0xFFF5EEE2)),
+                    )
+                    .toList(),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AiNoticeCard extends StatelessWidget {
+  const _AiNoticeCard({required this.aiNotice});
+
+  final AiErrorState aiNotice;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: const Color(0xFFFFF7EB),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: 10,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                const _StatusDot(),
+                Text(
+                  aiNotice.title,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-              ),
-              const _StatusDot(size: 14),
-              const SizedBox(width: 8),
-              Text('${prospect.fitScore.toStringAsFixed(0)} fit'),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${prospect.cityState} • ${prospect.revenueBand} • ${prospect.locations} location(s)',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            prospect.socialHook,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: prospect.reasons
-                .map(
-                  (reason) =>
-                      _Pill(label: reason, color: const Color(0xFFF5EEE2)),
-                )
-                .toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _OutreachCard extends StatelessWidget {
-  const _OutreachCard({required this.draft});
-
-  final OutreachDraft draft;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFCF6),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE8DED0)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(draft.salonName, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 6),
-          Text('${draft.channel} • ${draft.subjectLine}'),
-          const SizedBox(height: 10),
-          Text(draft.hook, style: Theme.of(context).textTheme.bodyLarge),
-          const SizedBox(height: 10),
-          Text(draft.body, style: Theme.of(context).textTheme.bodyMedium),
-          const SizedBox(height: 12),
-          _DetailRow(label: 'Postcard', value: draft.postcardConcept),
-          const SizedBox(height: 6),
-          _DetailRow(label: 'Guardrail', value: draft.guardrail),
-        ],
-      ),
-    );
-  }
-}
-
-class _ContentCard extends StatelessWidget {
-  const _ContentCard({required this.asset});
-
-  final ContentAsset asset;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFCF6),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE8DED0)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _Pill(label: asset.format, color: MareColors.sage),
-              _Pill(label: asset.status, color: const Color(0xFFFFF0B8)),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(asset.title, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 8),
-          Text(
-            'Primary keyword: ${asset.primaryKeyword}',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 10),
-          Text(asset.openingHook, style: Theme.of(context).textTheme.bodyLarge),
-          const SizedBox(height: 12),
-          ...asset.talkingPoints.map(
-            (point) => Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: _StatusDot(size: 8),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      point,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ),
-                ],
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              aiNotice.description,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 12),
+            ...aiNotice.fallbacks.map(
+              (fallback) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  'Fallback: $fallback',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          _DetailRow(label: 'CTA', value: asset.callToAction),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class _AiErrorCard extends StatelessWidget {
-  const _AiErrorCard({required this.error});
+class _StorageCard extends StatelessWidget {
+  const _StorageCard({required this.storage});
 
-  final AiErrorState error;
+  final StorageProfile storage;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF7EB),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFF0D5A4)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const _StatusDot(),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  error.title,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(error.description, style: Theme.of(context).textTheme.bodyLarge),
-          const SizedBox(height: 14),
-          ...error.fallbacks.map(
-            (fallback) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: _DetailRow(label: 'Fallback', value: fallback),
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'AWS Image Storage',
+              style: Theme.of(context).textTheme.titleLarge,
             ),
-          ),
-        ],
+            const SizedBox(height: 12),
+            _StorageRow(label: 'Provider', value: storage.provider),
+            _StorageRow(label: 'Bucket', value: storage.bucket),
+            _StorageRow(label: 'Region', value: storage.region),
+            _StorageRow(label: 'Prefix', value: storage.prefix),
+            _StorageRow(label: 'Mode', value: storage.mode),
+            const SizedBox(height: 12),
+            Text(
+              storage.fallback,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _ReviewCard extends StatelessWidget {
-  const _ReviewCard({required this.item});
-
-  final ReviewItem item;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFCF6),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE8DED0)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  item.lane,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              _Pill(
-                label: item.status,
-                color: item.status == 'Approved'
-                    ? MareColors.sage
-                    : const Color(0xFFFFF0B8),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          _DetailRow(label: 'Owner', value: item.owner),
-          const SizedBox(height: 6),
-          _DetailRow(label: 'Next', value: item.nextAction),
-          const SizedBox(height: 6),
-          _DetailRow(label: 'Fallback', value: item.fallback),
-        ],
-      ),
-    );
-  }
-}
-
-class _DetailRow extends StatelessWidget {
-  const _DetailRow({required this.label, required this.value});
+class _StorageRow extends StatelessWidget {
+  const _StorageRow({required this.label, required this.value});
 
   final String label;
   final String value;
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
-        style: Theme.of(context).textTheme.bodyMedium,
-        children: [
-          TextSpan(
-            text: '$label: ',
-            style: const TextStyle(
-              fontWeight: FontWeight.w700,
-              color: MareColors.ink,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: RichText(
+        text: TextSpan(
+          style: Theme.of(context).textTheme.bodyMedium,
+          children: [
+            TextSpan(
+              text: '$label: ',
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                color: MareColors.ink,
+              ),
             ),
-          ),
-          TextSpan(text: value),
+            TextSpan(text: value),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ToolbarAction extends StatelessWidget {
+  const _ToolbarAction({
+    required this.label,
+    required this.selected,
+    required this.onPressed,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        backgroundColor: selected ? MareColors.sage : Colors.transparent,
+        foregroundColor: MareColors.ink,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      child: Text(label),
+    );
+  }
+}
+
+class _StatBadge extends StatelessWidget {
+  const _StatBadge({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFCF6),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE8DED0)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: Theme.of(context).textTheme.bodyMedium),
+          const SizedBox(height: 4),
+          Text(value, style: Theme.of(context).textTheme.titleLarge),
         ],
       ),
     );
@@ -690,12 +1013,12 @@ class _ErrorState extends StatelessWidget {
             const _StatusDot(size: 22),
             const SizedBox(height: 16),
             Text(
-              'The AI preview could not load.',
+              'The MaRe app shell could not load.',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 12),
             Text(
-              'Fallback mode keeps the business story visible and asks for a fresh sync instead of showing a blank screen.',
+              'Fallback mode keeps the guest and role structure visible instead of showing a blank screen.',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
@@ -703,7 +1026,7 @@ class _ErrorState extends StatelessWidget {
             FilledButton(
               onPressed: onRetry,
               style: FilledButton.styleFrom(backgroundColor: MareColors.ink),
-              child: const Text('Retry AI Sync'),
+              child: const Text('Retry'),
             ),
           ],
         ),

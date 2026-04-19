@@ -9,7 +9,7 @@ class MareGrowthEngineApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MaRe Luxury Growth Engine',
+      title: 'MaRe',
       debugShowCheckedModeBanner: false,
       theme: buildMareTheme(),
       home: const DashboardScreen(),

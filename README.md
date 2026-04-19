@@ -1,40 +1,38 @@
-# MaRe Luxury Growth Engine
+# MaRe
 
-This repo is a hackathon-ready solution for the MaRe brief: help a luxury scalp-health brand expand from a Miami boutique proof point into a scalable national growth engine without losing brand quality.
+MaRe is one unified luxury scalp-health app with four experiences inside the same shell:
 
-The solution is split into two demo products:
+- `Guest`
+- `MaRe Internal`
+- `Salon Owner`
+- `Client`
 
-- `apps/flutter_app`: a polished Flutter prototype for mobile/tablet demos.
-- `apps/web_app`: a simple Flask + Python web app with AWS S3-oriented image storage.
+The app starts with a welcome screen, offers a guest path for public exploration, then routes signed-in users through role selection before loading the right dashboard.
 
-Both experiences tell the same business story:
+## Product Model
 
-- Identify high-fit luxury salons with revenue and aesthetic signals.
-- Draft luxury-standard outreach that sounds like a human insider.
-- Generate scalable content for AI search, blogs, Shorts, and social.
-- Keep a human approval lane before anything risky is sent or published.
-- Surface AI issues as visible business events with explicit fallbacks.
+MaRe is not built as separate apps. It is one product with role-aware routing:
 
-## Why This Solves The Issue
-
-MaRe's problem is not just lead generation. The real issue is scaling a luxury brand without turning it into automation spam. This solution treats growth as a guarded system:
-
-- `Prospecting`: rank salons by luxury fit, service mix, location density, and retail upside.
-- `Outreach`: generate salon-lingo messaging with hooks, value, and exclusivity guardrails.
-- `Creative scaling`: produce high-volume content around scalp health, head spas, and wellness keywords.
-- `Human review`: keep Rebecca, Marianna, and Growth Ops in the loop before final release.
+1. `Guest`
+   Browse public education, brand storytelling, partner-salon discovery, and a partner-application path.
+2. `MaRe Internal`
+   Prospect salons, review AI outputs, manage outreach, approve content, and run partner growth.
+3. `Salon Owner`
+   Track partner analytics, MaRe Eye media, staff enablement, and reorder flows.
+4. `Client`
+   Review scalp journey, appointments, progress images, routines, and shopping.
 
 ## Repo Structure
 
 ```text
 apps/
   flutter_app/
-    lib/              # Flutter frontend
-    backend/          # Local mock backend for the Flutter solution
-    agent/            # AI agent prompt + fallback rules
+    lib/              # Main MaRe Flutter frontend for iOS, Android, and Web
+    backend/          # Local mock backend for MaRe app-state and storage APIs
+    agent/            # AI prompt + fallback rules
   web_app/
-    app.py            # Flask entrypoint
-    templates/        # Server-rendered UI
+    app.py            # Flask entrypoint for the simple web version
+    templates/        # Server-rendered MaRe shell with guest/sign-in/roles
     static/           # CSS + demo images
     services/         # AWS S3 storage service
     api/              # Vercel-compatible Python entrypoint
@@ -44,55 +42,46 @@ docs/
   mare_pitch_deck.md
 ```
 
-## Flutter Notes
+## Flutter App
 
-The Flutter app now includes:
+The Flutter app is the main cross-platform MaRe client and now includes:
 
-- `lib/shared/models/` with `json_annotation` models so JSON parsing is generated instead of handwritten.
-- A luxury-styled dashboard covering prospects, outreach, content, AI watchtower, and approval queue.
-- A yellow status dot shown anywhere the developer should recognize an AI-controlled or fallback-enabled surface.
-- Local `backend/` and `agent/` folders to show the full solution shape, not just the UI.
-- Explicit Flutter targets for `ios`, `android`, and `web`.
+- one `MaRe` shell for `guest`, `sign in`, `role picker`, and `role dashboards`
+- role-aware experiences for `MaRe Internal`, `Salon Owner`, and `Client`
+- `json_annotation` models in `lib/shared/models/`
+- explicit Flutter targets for `ios`, `android`, and `web`
+- AWS S3-oriented storage endpoints in the local backend
+- yellow-dot AI/fallback marker wherever AI logic or guarded output is active
 
-## Web Notes
+## Simple Web Version
 
-The web app is intentionally simple and now uses Flask + Python:
+The simple web version uses `Flask + Python` and mirrors the same product flow:
 
-- Flask server-rendered frontend.
-- API routes at `/api/snapshot`, `/api/agent`, and image storage endpoints.
-- AWS S3-oriented storage flow for pictures.
-- Same yellow-dot developer marker and same AI fallback story.
+- welcome screen
+- guest mode
+- sign-in mock step
+- role picker
+- role-specific dashboards
+- JSON endpoints for app state, AI state, and storage
 
-## AI Errors And Fallbacks
+## AWS Image Storage
 
-AI errors should never create a blank screen or silent failure. In this repo, AI issues are presented as business-readable system states:
+Both versions use the same picture-storage model:
 
-- Show the issue in an `AI Watchtower` card.
-- Keep approved or cached data on screen.
-- Block risky automation like outreach sends.
-- Move uncertain prospects into manual review.
-- Downgrade from video generation to blog/script generation if media tools fail.
-- Preserve the yellow dot so the developer knows fallback mode is active.
+- `AWS S3` for scalp images, before/after photos, generated assets, and campaign media
+- safe fallback mode when live signing credentials are unavailable
+- upload-preparation endpoints for future presigned upload flows
 
-## Business To Do
+## AI and Fallback Rules
 
-See [docs/business-technical-todos.md](docs/business-technical-todos.md) for the working list. The main business next steps are:
+AI never acts as silent automation.
 
-- connect real revenue and salon data providers
-- validate partner scoring with MaRe founders
-- train and tighten salon-lingo brand prompts
-- define partner onboarding and revenue-share flows
-- measure AI-search wins on live content
-
-## Technical To Do
-
-Key technical next steps:
-
-- replace mock data with live APIs and authenticated workflows
-- add persistent CRM state and approval history
-- connect real multimodal providers for video generation and live AWS S3 uploads
-- add analytics, audit logging, and role-based access
-- productionize tests, observability, and deployment pipelines
+- guest users only see public education
+- salon owners only see partner data
+- clients only see their own journey
+- internal teams can generate drafts but risky actions stay gated
+- uncertain AI output falls back to templates or review queues
+- the yellow dot shows AI-managed or fallback-enabled surfaces
 
 ## Run The Demos
 
@@ -122,14 +111,22 @@ Web:
 flutter run -d chrome
 ```
 
-Optional mock backend:
+Optional local backend:
 
 ```bash
 cd apps/flutter_app/backend
 npm run dev
 ```
 
-### Web
+AWS env vars for the backend:
+
+```bash
+AWS_S3_BUCKET=mare-demo-assets
+AWS_REGION=us-east-1
+AWS_S3_PREFIX=uploads
+```
+
+### Simple Web
 
 ```bash
 cd apps/web_app
@@ -149,6 +146,21 @@ AWS_ACCESS_KEY_ID=...
 AWS_SECRET_ACCESS_KEY=...
 ```
 
+## Business and Technical To Do
+
+See [docs/business-technical-todos.md](docs/business-technical-todos.md).
+
+The main next steps are:
+
+- connect live salon and client data sources
+- implement real auth and role mapping
+- move mock storage prep into real presigned S3 uploads
+- integrate real LLM and multimodal providers
+- add analytics, CRM state, and audit logs
+
 ## Presentation
 
-The deck content lives in [docs/mare_pitch_deck.md](docs/mare_pitch_deck.md). It is written to support a founder or judge walkthrough covering the problem, product, architecture, differentiation, ROI, and roadmap.
+The pitch materials live in:
+
+- [docs/mare_pitch_deck.md](docs/mare_pitch_deck.md)
+- [docs/MaRe_Luxury_Growth_Engine.pptx](docs/MaRe_Luxury_Growth_Engine.pptx)

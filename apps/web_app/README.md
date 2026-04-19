@@ -1,14 +1,17 @@
 # Web App
 
-Simple Flask + Python version of the MaRe Luxury Growth Engine.
+Simple Flask + Python version of the unified `MaRe` app.
 
 ## Includes
 
-- Flask server-rendered dashboard
-- JSON endpoints for snapshot, agent state, and AWS image storage
+- welcome screen
+- guest mode
+- sign-in mock step
+- role picker
+- role dashboards for internal, salon-owner, and client views
+- JSON endpoints for app state, agent state, and AWS image storage
 - AWS S3-oriented storage service for picture uploads
 - Vercel-compatible Python entrypoint in `api/index.py`
-- demo illustrations and yellow-dot AI marker
 
 ## Run
 

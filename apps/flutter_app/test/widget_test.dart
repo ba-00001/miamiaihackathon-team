@@ -1,13 +1,18 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_app/app.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('renders the MaRe growth dashboard', (tester) async {
+  testWidgets('renders the MaRe shell welcome flow', (tester) async {
     await tester.pumpWidget(const MareGrowthEngineApp());
     await tester.pumpAndSettle();
 
-    expect(find.text('The MaRe Luxury Growth Engine'), findsOneWidget);
-    expect(find.text('Luxury-grade AI growth system'), findsOneWidget);
-    expect(find.text('Human approval required before send'), findsOneWidget);
+    expect(find.text('MaRe'), findsWidgets);
+    expect(
+      find.text(
+        'One luxury scalp-health app for guests, MaRe growth teams, partner salons, and clients.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Continue as Guest'), findsOneWidget);
   });
 }

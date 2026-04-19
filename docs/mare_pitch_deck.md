@@ -2,8 +2,8 @@
 
 ## Slide 1: Title
 
-MaRe Luxury Growth Engine  
-Scaling a Miami luxury scalp-health brand into a national authority
+MaRe  
+One luxury scalp-health app with guest, internal, partner, and client experiences
 
 ## Slide 2: The Problem
 
@@ -19,18 +19,18 @@ Scaling a Miami luxury scalp-health brand into a national authority
 
 ## Slide 4: Our Solution
 
-- Global Prospector: find the right salons.
-- Luxury Outreach Engine: draft outreach that sounds human.
-- Creative Engine: generate AI-search-ready content at scale.
-- Approval Queue: keep founders and ops in control.
+- Guest mode for public exploration
+- One sign-in for all MaRe roles
+- Role picker for internal, salon-owner, and client dashboards
+- Shared AI, storage, and review systems underneath
 
 ## Slide 5: Product One
 
 Flutter app for live demos:
 
-- premium founder-facing interface
-- fast mobile and tablet storytelling
-- visible AI watchtower and review queue
+- one MaRe shell across iOS, Android, and Web
+- role-aware dashboard routing
+- visible AI watchtower and yellow-dot fallback marker
 
 ## Slide 6: Product Two
 
@@ -38,7 +38,7 @@ Simple Flask web app:
 
 - Python-based and easy to adapt
 - easy to share with judges or advisors
-- same business logic and same fallback story
+- same guest/sign-in/role model
 - AWS S3 used as the image-storage target for pictures and generated assets
 
 ## Slide 7: Why It Wins

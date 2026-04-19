@@ -1,7 +1,14 @@
 export 'ai_error_state.dart';
+export 'card_stat.dart';
 export 'content_asset.dart';
+export 'experience_card.dart';
+export 'experience_section.dart';
+export 'guest_experience.dart';
 export 'growth_engine_snapshot.dart';
+export 'mare_app_snapshot.dart';
 export 'metric_summary.dart';
 export 'outreach_draft.dart';
 export 'prospect_signal.dart';
 export 'review_item.dart';
+export 'role_experience.dart';
+export 'storage_profile.dart';

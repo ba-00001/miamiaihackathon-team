@@ -16,10 +16,10 @@ LINE = RGBColor(232, 221, 206)
 
 SLIDES = [
     (
-        "MaRe Luxury Growth Engine",
+        "MaRe",
         [
-            "Scaling a Miami luxury scalp-health brand into a national authority",
-            "Hackathon solution across Flutter, web, backend, and AI agent layers",
+            "One luxury scalp-health app with guest, internal, salon-owner, and client experiences",
+            "Hackathon solution across Flutter, Flask, backend, AI agent, and AWS storage layers",
         ],
     ),
     (
@@ -41,17 +41,17 @@ SLIDES = [
     (
         "Our Solution",
         [
-            "Global Prospector: find the right salons.",
-            "Luxury Outreach Engine: draft outreach that sounds human.",
-            "Creative Engine: generate AI-search-ready content at scale.",
-            "Approval Queue: keep founders and ops in control.",
+            "Guest mode for public discovery.",
+            "One sign-in for all MaRe roles.",
+            "Role picker for internal, salon-owner, and client dashboards.",
+            "Shared AI, storage, and review systems under one app shell.",
         ],
     ),
     (
         "Flutter App",
         [
-            "Premium founder-facing demo built in Flutter.",
-            "Shows prospect ranking, luxury outreach, content engine, AI watchtower, and approval queue.",
+            "One MaRe shell across iOS, Android, and Web.",
+            "Shows guest mode, sign-in, role selection, and role-specific dashboards.",
             "Includes json_annotation models, a local backend stub, and agent fallback rules.",
         ],
     ),

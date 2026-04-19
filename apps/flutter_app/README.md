@@ -1,18 +1,18 @@
 # Flutter App
 
-Founder-facing Flutter prototype for the MaRe Luxury Growth Engine.
-
-Platforms enabled:
-
-- iOS
-- Android
-- Web
+Main `MaRe` app built in Flutter for `iOS`, `Android`, and `Web`.
 
 ## Includes
 
-- luxury dashboard UI
+- one unified MaRe shell
+- guest mode
+- sign-in mock step
+- role picker
+- role dashboards for:
+  - `MaRe Internal`
+  - `Salon Owner`
+  - `Client`
 - `json_annotation` models in `lib/shared/models/`
-- mock business data
 - local backend stub in `backend/`
 - AI prompt and fallback notes in `agent/`
 - AWS S3-oriented image storage endpoints for picture uploads
@@ -24,19 +24,19 @@ flutter pub get
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
-Run on iOS simulator:
+iOS:
 
 ```bash
 flutter run -d ios
 ```
 
-Run on Android emulator/device:
+Android:
 
 ```bash
 flutter run -d android
 ```
 
-Run on Flutter Web:
+Flutter Web:
 
 ```bash
 flutter run -d chrome
