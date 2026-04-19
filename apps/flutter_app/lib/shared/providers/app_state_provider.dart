@@ -4,9 +4,6 @@ import 'package:provider/provider.dart';
 import '../models/mare_app_snapshot.dart';
 import '../services/mare_app_repository.dart';
 
-import '../models/mare_app_snapshot.dart';
-import '../services/mare_app_repository.dart';
-
 class AppStateNotifier extends ChangeNotifier {
   MareAppSnapshot? _snapshot;
   final MareAppRepository _repo = MareAppRepository();
