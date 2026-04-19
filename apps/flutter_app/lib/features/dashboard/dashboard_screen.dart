@@ -9,7 +9,7 @@ import '../../theme/mare_theme.dart';
 enum _MareView { welcome, guest, signIn, rolePicker, roleDashboard }
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  DashboardScreen({super.key});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -17,7 +17,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   late Future<MareAppSnapshot> _snapshotFuture;
-  final _repository = const MareAppRepository();
+final _repository = MareAppRepository();
   final _emailController = TextEditingController(
     text: 'concierge@mareheadspa.com',
   );

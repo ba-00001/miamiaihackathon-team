@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import 'features/dashboard/dashboard_screen.dart';
+import 'shared/providers/app_state_provider.dart';
+import 'shared/services/mare_app_repository.dart';
+import 'shared/providers/app_state_provider.dart';
 import 'theme/mare_theme.dart';
 
 class MareGrowthEngineApp extends StatelessWidget {
@@ -8,11 +13,14 @@ class MareGrowthEngineApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MaRe',
-      debugShowCheckedModeBanner: false,
-      theme: buildMareTheme(),
-      home: const DashboardScreen(),
+    return ChangeNotifierProvider<AppStateNotifier>(
+      create: (context) => AppStateNotifier()..loadSnapshot(),
+      child: MaterialApp(
+        title: 'MaRe',
+        debugShowCheckedModeBanner: false,
+        theme: buildMareTheme(),
+home: DashboardScreen(),
+      ),
     );
   }
 }
