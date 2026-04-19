@@ -9,10 +9,10 @@ void main() {
     expect(find.text('MaRe'), findsWidgets);
     expect(
       find.text(
-        'One luxury scalp-health app for guests, MaRe internal teams, partner operators, and end users.',
+        'Scalp wellness, reimagined for a luxury world.',
       ),
       findsOneWidget,
     );
-    expect(find.text('Continue as Guest'), findsOneWidget);
+    expect(find.text('Enter MaRe'), findsOneWidget);
   });
 }
