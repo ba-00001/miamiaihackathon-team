@@ -1,0 +1,7 @@
+langchain-google-genai
+langgraph
+langgraph-checkpoint-postgres
+psycopg[binary,pool]
+fastapi
+uvicorn
+python-dotenv
