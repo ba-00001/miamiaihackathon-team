@@ -1,0 +1,409 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap");
+
+:root {
+  --background: #f8f1e6;
+  --card: #fffaf2;
+  --ink: #1e1a17;
+  --muted: #6b5b50;
+  --gold: #f5c94c;
+  --line: #e8ddce;
+  --sage: #dce6d2;
+  --rose: #f3e1d7;
+  --warning: #fff7eb;
+  --warning-line: #f0d5a4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top right, rgba(245, 201, 76, 0.34), transparent 20%),
+    linear-gradient(180deg, #fffaf2 0%, #f7ecdf 100%);
+  color: var(--ink);
+  font-family: "Manrope", "Helvetica Neue", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  gap: 20px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 28px;
+  box-shadow: 0 12px 32px rgba(94, 75, 62, 0.08);
+}
+
+.brand,
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.top-link {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.hero,
+.section-card,
+.metric-card,
+.content-card,
+.agent-card {
+  border: 1px solid var(--line);
+  background: var(--card);
+  box-shadow: 0 12px 32px rgba(94, 75, 62, 0.08);
+}
+
+.hero {
+  border-radius: 40px;
+  padding: 32px;
+  display: grid;
+  gap: 28px;
+  align-items: center;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  background: linear-gradient(135deg, #fffaf2 0%, #f5eadb 100%);
+}
+
+.hero-copy h1,
+.section-header h2,
+.metric-card h2,
+.content-card h3 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.hero-copy h1 {
+  font-size: clamp(2.7rem, 5vw, 4.8rem);
+  margin: 18px 0 12px;
+  line-height: 0.95;
+}
+
+.hero-text {
+  max-width: 52rem;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.hero-art img,
+.flow-image {
+  width: 100%;
+  display: block;
+}
+
+.button-row,
+.compact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.compact-row {
+  margin-top: 14px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border: 1px solid var(--line);
+}
+
+.button.primary {
+  background: var(--ink);
+  color: #fffaf2;
+  border-color: var(--ink);
+}
+
+.button.secondary {
+  background: transparent;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.agent-card,
+.content-card,
+.metric-card,
+.section-card {
+  border-radius: 30px;
+}
+
+.agent-card,
+.content-card {
+  padding: 18px;
+}
+
+.metric-card {
+  padding: 22px;
+}
+
+.metric-card h2 {
+  font-size: 2.7rem;
+  margin: 16px 0 0;
+}
+
+.metrics-grid,
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.metrics-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.three-up {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.two-up {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.section-card {
+  padding: 24px;
+}
+
+.section-header h2 {
+  font-size: 2rem;
+  margin: 0 0 8px;
+}
+
+.section-header p,
+.muted {
+  color: var(--muted);
+}
+
+.section-header p,
+.content-card p,
+.agent-card p,
+.metric-card p,
+.developer-marker p,
+.list li {
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.persona-note {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.fit-chip,
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.fit-chip {
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.pill {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #f4ebde;
+  font-size: 0.88rem;
+}
+
+.pill-sage {
+  background: var(--sage);
+}
+
+.pill-rose {
+  background: var(--rose);
+}
+
+.pill-gold {
+  background: #fff0b8;
+}
+
+.stack {
+  display: grid;
+  gap: 14px;
+}
+
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.stat-chip {
+  min-width: 132px;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: #fffdf8;
+  display: grid;
+  gap: 4px;
+}
+
+.access-form {
+  width: 100%;
+  padding: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 28px;
+  display: grid;
+  gap: 10px;
+}
+
+.access-form label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.access-form input {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: #fffdf8;
+  color: var(--ink);
+}
+
+.compact-stack {
+  gap: 4px;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0;
+  display: grid;
+  gap: 10px;
+}
+
+.list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--gold);
+  display: inline-block;
+  flex: 0 0 auto;
+  margin-top: 0.2em;
+}
+
+.status-dot.small {
+  width: 10px;
+  height: 10px;
+}
+
+.status-dot.tiny {
+  width: 8px;
+  height: 8px;
+}
+
+.status-dot.large {
+  width: 18px;
+  height: 18px;
+}
+
+.warning-card .content-card,
+.warning-inner {
+  background: var(--warning);
+  border-color: var(--warning-line);
+}
+
+.developer-marker {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.label {
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+@media (max-width: 1080px) {
+  .topbar,
+  .hero,
+  .metrics-grid,
+  .three-up,
+  .two-up {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 700px) {
+  .page-shell {
+    padding: 16px;
+  }
+
+  .hero,
+  .section-card {
+    padding: 20px;
+  }
+
+  .hero-copy h1 {
+    font-size: 2.6rem;
+  }
+}

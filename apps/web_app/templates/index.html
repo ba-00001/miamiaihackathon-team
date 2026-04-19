@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ app_data.appName }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="{{ url_for('index') }}">
+          <span class="status-dot"></span>
+          <span>{{ app_data.appName }}</span>
+        </a>
+        <nav class="top-actions">
+          <a class="top-link" href="{{ url_for('index', view='guest') }}">Enter</a>
+          <a class="top-link" href="{{ url_for('index', view='signin') }}">Private Access</a>
+          <a class="top-link" href="{{ url_for('index', view='role-picker') }}">Experiences</a>
+        </nav>
+      </header>
+
+      {% if view == 'welcome' %}
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span>MaRe</div>
+          <h1>Scalp wellness, reimagined for a luxury world.</h1>
+          <p class="hero-text">
+            MaRe is introduced as a brand first: elevated rituals, advanced scalp intelligence,
+            and a private-feeling experience for discerning guests, partner operators, and the
+            internal team guiding growth behind the scenes.
+          </p>
+          <div class="pill-row">
+            <span class="pill pill-sage">Quiet luxury</span>
+            <span class="pill pill-rose">Personalized scalp journeys</span>
+            <span class="pill pill-gold">AWS image storage: {{ storage.mode }}</span>
+          </div>
+          <div class="button-row">
+            <a class="button primary" href="{{ url_for('index', view='guest') }}">Enter MaRe</a>
+            <a class="button secondary" href="{{ url_for('index', view='signin') }}">Private Access</a>
+          </div>
+        </div>
+        <div class="hero-art">
+          <img src="{{ url_for('static', filename='images/mare-hero-web.svg') }}" alt="Luxury growth illustration" />
+        </div>
+      </section>
+
+      <section class="grid three-up">
+        <article class="content-card">
+          <h3>The Brand</h3>
+          <p class="muted">A refined first impression</p>
+          <p>Lead with the MaRe world itself: ritual-led care, modern scalp diagnostics, destination-level service, and product discovery that feels editorial instead of transactional.</p>
+        </article>
+        {% for section in app_data.guest.sections[:2] %}
+        {% for card in section.cards[:1] %}
+        <article class="content-card">
+          <h3>{{ card.title }}</h3>
+          <p class="muted">{{ card.subtitle }}</p>
+          <p>{{ card.detail }}</p>
+        </article>
+        {% endfor %}
+        {% endfor %}
+      </section>
+
+      {% elif view == 'guest' %}
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span>Guest mode</div>
+          <h1>{{ app_data.guest.title }}</h1>
+          <p class="hero-text">{{ app_data.guest.description }}</p>
+          <div class="pill-row">
+            {% for highlight in app_data.guest.highlights %}
+            <span class="pill pill-sage">{{ highlight }}</span>
+            {% endfor %}
+          </div>
+          <div class="button-row">
+            <a class="button primary" href="{{ url_for('index', view='signin') }}">Private Access</a>
+          </div>
+        </div>
+        <div class="hero-art">
+          <img src="{{ url_for('static', filename='images/mare-hero-web.svg') }}" alt="Guest illustration" />
+        </div>
+      </section>
+
+      {% for section in app_data.guest.sections %}
+      <section class="section-card">
+        <div class="section-header">
+          <h2>{{ section.title }}</h2>
+          <p>{{ section.subtitle }}</p>
+        </div>
+        <div class="grid two-up">
+          {% for card in section.cards %}
+          <article class="content-card">
+            <h3>{{ card.title }}</h3>
+            <p class="muted">{{ card.subtitle }}</p>
+            <p>{{ card.detail }}</p>
+            <div class="stat-row">
+              {% for stat in card.stats %}
+              <div class="stat-chip">
+                <span class="muted">{{ stat.label }}</span>
+                <strong>{{ stat.value }}</strong>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="pill-row compact">
+              {% for tag in card.tags %}
+              <span class="pill">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+      {% endfor %}
+
+      {% elif view == 'signin' %}
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span>Sign in</div>
+          <h1>Private access to the MaRe world</h1>
+          <p class="hero-text">
+            Enter once, then continue into the experience that matches your relationship to MaRe.
+            One account can hold internal, partner, and end-user access.
+          </p>
+          <div class="button-row">
+            <a class="button primary" href="{{ url_for('index', view='role-picker') }}">Continue</a>
+            <a class="button secondary" href="{{ url_for('index', view='guest') }}">Return to Brand Entry</a>
+          </div>
+        </div>
+        <div class="hero-art sign-in-card">
+          <div class="access-form">
+            <label>Email</label>
+            <input value="concierge@mareheadspa.com" />
+            <label>Password</label>
+            <input value="mare-private" type="password" />
+            <p class="muted">Use your MaRe credentials to continue into your private experience.</p>
+          </div>
+        </div>
+      </section>
+
+      {% elif view == 'role-picker' %}
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span>Role selection</div>
+          <h1>Choose your place inside MaRe</h1>
+          <p class="hero-text">
+            Each role reveals a tailored information environment while preserving the same
+            MaRe brand language, visual finish, and controlled AI behavior.
+          </p>
+        </div>
+        <div class="hero-art">
+          <img src="{{ url_for('static', filename='images/growth-flow-web.svg') }}" alt="Role selection flow" />
+        </div>
+      </section>
+
+      <section class="grid three-up">
+        {% for role in app_data.roles %}
+        <article class="content-card">
+          <h3>{{ role.title }}</h3>
+          <p class="muted">{{ role.audience }}</p>
+          <p>{{ role.summary }}</p>
+          <p class="persona-note">Persona: {{ role.sections[0].cards[0].title }} — {{ role.sections[0].cards[0].subtitle }}</p>
+          <div class="pill-row compact">
+            {% for action in role.quickActions %}
+            <span class="pill">{{ action }}</span>
+            {% endfor %}
+          </div>
+          <div class="button-row compact-row">
+            <a class="button primary" href="{{ url_for('index', view='dashboard', role=role.id) }}">Open Role Dashboard</a>
+          </div>
+        </article>
+        {% endfor %}
+      </section>
+
+      {% elif view == 'dashboard' and current_role %}
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span>{{ current_role.title }}</div>
+          <h1>{{ current_role.heroTitle }}</h1>
+          <p class="hero-text">{{ current_role.heroDescription }}</p>
+          <div class="pill-row">
+            {% for action in current_role.quickActions %}
+            <span class="pill pill-sage">{{ action }}</span>
+            {% endfor %}
+          </div>
+          <div class="button-row">
+            <a class="button primary" href="{{ url_for('index', view='role-picker') }}">Switch Role</a>
+          </div>
+        </div>
+        <div class="hero-art">
+          <img src="{{ url_for('static', filename='images/mare-hero-web.svg') }}" alt="{{ current_role.title }}" />
+        </div>
+      </section>
+
+      {% for section in current_role.sections %}
+      <section class="section-card">
+        <div class="section-header">
+          <h2>{{ section.title }}</h2>
+          <p>{{ section.subtitle }}</p>
+        </div>
+        <div class="grid two-up">
+          {% for card in section.cards %}
+          <article class="content-card">
+            <h3>{{ card.title }}</h3>
+            <p class="muted">{{ card.subtitle }}</p>
+            <p>{{ card.detail }}</p>
+            <div class="stat-row">
+              {% for stat in card.stats %}
+              <div class="stat-chip">
+                <span class="muted">{{ stat.label }}</span>
+                <strong>{{ stat.value }}</strong>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="pill-row compact">
+              {% for tag in card.tags %}
+              <span class="pill">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+      {% endfor %}
+
+      {% if current_role.id == 'internal' %}
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Prospecting And Outreach Contracts</h2>
+          <p>These are the concrete salon and outreach objects the internal MaRe team uses for guarded CRM work.</p>
+        </div>
+        <div class="grid two-up">
+          {% for salon in app_data.internalData.salonProfiles %}
+          <article class="content-card">
+            <h3>{{ salon.name }}</h3>
+            <p class="muted">{{ salon.location }} • {{ salon.estimated_revenue }}</p>
+            <p>Luxury fit score: <strong>{{ salon.compatibility_score }}</strong></p>
+            <div class="pill-row compact">
+              {% for tag in salon.aesthetic_tags %}
+              <span class="pill">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          </article>
+          {% endfor %}
+          {% for draft in app_data.internalData.outreachDrafts %}
+          <article class="content-card">
+            <h3>Outreach {{ draft.salon_id }}</h3>
+            <p class="muted">{{ draft.status }}</p>
+            <p>{{ draft.hook }}</p>
+            <p class="muted">{{ draft.value_prop }}</p>
+            {% if draft.incentives %}
+            <div class="stat-row">
+              <div class="stat-chip">
+                <span class="muted">Projected conversion</span>
+                <strong>{{ draft.incentives.projected_retail_conversion_rate }}</strong>
+              </div>
+              <div class="stat-chip">
+                <span class="muted">ROI</span>
+                <strong>{{ draft.incentives.roi_multiplier }}x</strong>
+              </div>
+            </div>
+            {% endif %}
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <section class="grid two-up">
+        <section class="section-card warning-card">
+          <div class="section-header">
+            <h2>{{ app_data.aiNotice.title }}</h2>
+            <p>{{ app_data.aiNotice.description }}</p>
+          </div>
+          <article class="content-card warning-inner">
+            {% for fallback in app_data.aiNotice.fallbacks %}
+            <p class="muted"><strong>Fallback:</strong> {{ fallback }}</p>
+            {% endfor %}
+          </article>
+        </section>
+
+        <section class="section-card">
+          <div class="section-header">
+            <h2>AWS Image Storage</h2>
+            <p>Media uploads, scalp images, and generated assets stay in the same storage model across all roles.</p>
+          </div>
+          <article class="content-card">
+            <p><strong>Provider:</strong> {{ storage.provider }}</p>
+            <p><strong>Bucket:</strong> {{ storage.bucket }}</p>
+            <p><strong>Region:</strong> {{ storage.region }}</p>
+            <p><strong>Prefix:</strong> {{ storage.prefix }}</p>
+            <p><strong>Mode:</strong> {{ storage.mode }}</p>
+            <p class="muted">{{ storage.fallback }}</p>
+          </article>
+        </section>
+      </section>
+      {% endif %}
+
+      <section class="section-card">
+        <div class="section-header">
+          <h2>Developer Marker</h2>
+          <p>The yellow circle is the visual cue for guarded AI, elevated review, and protected brand surfaces.</p>
+        </div>
+        <div class="developer-marker">
+          <span class="status-dot large"></span>
+          <p class="muted">
+            Whenever you see the yellow dot, you are looking at AI-assisted or fallback-enabled surfaces that still require human review.
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
